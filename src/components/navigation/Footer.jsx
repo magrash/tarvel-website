@@ -1,0 +1,248 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import {
+    Facebook,
+    Instagram,
+    Twitter,
+    Youtube,
+    Mail,
+    Phone,
+    MapPin,
+    ArrowRight
+} from 'lucide-react';
+
+export default function Footer() {
+    const currentYear = new Date().getFullYear();
+
+    const footerLinks = {
+        explore: [
+            { name: 'Destinations', href: '/destinations' },
+            { name: 'Tours & Packages', href: '/tours' },
+            { name: 'Experiences', href: '/#experiences' },
+            { name: 'Time Gate Deals', href: '/tours#timegate' },
+        ],
+        company: [
+            { name: 'About Goba', href: '/about' },
+            { name: 'Our Story', href: '/story' },
+            { name: 'Testimonials', href: '/#testimonials' },
+            { name: 'Careers', href: '/careers' },
+        ],
+        support: [
+            { name: 'Contact Us', href: '/contact' },
+            { name: 'FAQs', href: '/faqs' },
+            { name: 'Travel Insurance', href: '/insurance' },
+            { name: 'Visa Guide', href: '/visa' },
+        ],
+        legal: [
+            { name: 'Privacy Policy', href: '/privacy' },
+            { name: 'Terms of Service', href: '/terms' },
+            { name: 'Booking Conditions', href: '/conditions' },
+            { name: 'Cookie Policy', href: '/cookies' },
+        ],
+    };
+
+    const socialLinks = [
+        { icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
+        { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+        { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
+        { icon: Youtube, href: 'https://youtube.com', label: 'YouTube' },
+    ];
+
+    return (
+        <footer className="relative bg-obsidian-950 border-t border-gold-500/20">
+            {/* Decorative top border */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500 to-transparent" />
+
+            {/* Newsletter Section */}
+            <div className="border-b border-gold-500/10">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+                        <div className="text-center lg:text-left">
+                            <h3 className="font-display text-2xl text-gold-500 mb-2">
+                                Join the Time Travelers
+                            </h3>
+                            <p className="text-white/60">
+                                Receive exclusive offers and ancient secrets directly to your inbox.
+                            </p>
+                        </div>
+                        <div className="flex w-full lg:w-auto max-w-md">
+                            <input
+                                type="email"
+                                placeholder="Enter your email"
+                                className="flex-1 px-6 py-3 bg-obsidian-900 border border-gold-500/30 rounded-l-lg text-white placeholder:text-white/40 focus:outline-none focus:border-gold-500 transition-colors"
+                            />
+                            <motion.button
+                                className="px-6 py-3 bg-gold-500 text-obsidian-950 font-display font-semibold tracking-wider rounded-r-lg flex items-center gap-2"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                Subscribe
+                                <ArrowRight className="w-4 h-4" />
+                            </motion.button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Footer Content */}
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 lg:gap-8">
+
+                    {/* Brand Column */}
+                    <div className="lg:col-span-2">
+                        <Link href="/" className="inline-block mb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="text-4xl">𓂀</span>
+                                <div>
+                                    <h2 className="font-display text-2xl font-bold text-gold-500 tracking-wider">
+                                        GOBA
+                                    </h2>
+                                    <p className="text-xs text-gold-500/60 tracking-[0.2em] uppercase">
+                                        Time Travel Experiences
+                                    </p>
+                                </div>
+                            </div>
+                        </Link>
+                        <p className="text-white/60 mb-6 max-w-xs">
+                            Journey through 5000 years of Egyptian history. Where ancient wonders meet futuristic luxury.
+                        </p>
+
+                        {/* Contact Info */}
+                        <div className="space-y-3 mb-6">
+                            <a href="mailto:hello@gobatravel.com" className="flex items-center gap-3 text-white/60 hover:text-gold-500 transition-colors">
+                                <Mail className="w-4 h-4" />
+                                <span>hello@gobatravel.com</span>
+                            </a>
+                            <a href="tel:+442012345678" className="flex items-center gap-3 text-white/60 hover:text-gold-500 transition-colors">
+                                <Phone className="w-4 h-4" />
+                                <span>+44 20 1234 5678</span>
+                            </a>
+                            <div className="flex items-start gap-3 text-white/60">
+                                <MapPin className="w-4 h-4 mt-1" />
+                                <span>London • Paris • Cairo</span>
+                            </div>
+                        </div>
+
+                        {/* Social Links */}
+                        <div className="flex gap-4">
+                            {socialLinks.map((social) => (
+                                <motion.a
+                                    key={social.label}
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-2 rounded-lg border border-gold-500/30 text-gold-500 hover:bg-gold-500 hover:text-obsidian-950 transition-colors"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    aria-label={social.label}
+                                >
+                                    <social.icon className="w-5 h-5" />
+                                </motion.a>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Links Columns */}
+                    <div>
+                        <h4 className="font-display text-gold-500 tracking-wider uppercase mb-4">
+                            Explore
+                        </h4>
+                        <ul className="space-y-3">
+                            {footerLinks.explore.map((link) => (
+                                <li key={link.name}>
+                                    <Link
+                                        href={link.href}
+                                        className="text-white/60 hover:text-gold-500 transition-colors"
+                                    >
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 className="font-display text-gold-500 tracking-wider uppercase mb-4">
+                            Company
+                        </h4>
+                        <ul className="space-y-3">
+                            {footerLinks.company.map((link) => (
+                                <li key={link.name}>
+                                    <Link
+                                        href={link.href}
+                                        className="text-white/60 hover:text-gold-500 transition-colors"
+                                    >
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 className="font-display text-gold-500 tracking-wider uppercase mb-4">
+                            Support
+                        </h4>
+                        <ul className="space-y-3">
+                            {footerLinks.support.map((link) => (
+                                <li key={link.name}>
+                                    <Link
+                                        href={link.href}
+                                        className="text-white/60 hover:text-gold-500 transition-colors"
+                                    >
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 className="font-display text-gold-500 tracking-wider uppercase mb-4">
+                            Legal
+                        </h4>
+                        <ul className="space-y-3">
+                            {footerLinks.legal.map((link) => (
+                                <li key={link.name}>
+                                    <Link
+                                        href={link.href}
+                                        className="text-white/60 hover:text-gold-500 transition-colors"
+                                    >
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {/* Bottom Bar */}
+            <div className="border-t border-gold-500/10">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <p className="text-white/40 text-sm text-center md:text-left">
+                            © {currentYear} Goba Travel. All rights reserved. ATOL Protected.
+                        </p>
+                        <div className="flex items-center gap-6 text-white/40 text-sm">
+                            <span>🇬🇧 UK Registered</span>
+                            <span>|</span>
+                            <span>Secure Payments</span>
+                            <span>|</span>
+                            <span>24/7 Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Decorative hieroglyphs */}
+            <div className="absolute bottom-0 left-0 right-0 overflow-hidden pointer-events-none">
+                <div className="text-center text-gold-500/5 text-6xl tracking-[0.5em] whitespace-nowrap">
+                    𓀀 𓀁 𓀂 𓀃 𓁀 𓁐 𓂀 𓃭 𓄿 𓅓 𓅃 𓆣 𓇯 𓈖 𓉐 𓊽
+                </div>
+            </div>
+        </footer>
+    );
+}
