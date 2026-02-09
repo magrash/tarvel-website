@@ -88,6 +88,8 @@ module.exports = {
                 'particle-float': 'particle-float 15s linear infinite',
                 'scarab-crawl': 'scarab-crawl 0.5s ease-out forwards',
                 'hologram-flicker': 'hologram-flicker 0.1s ease-in-out infinite',
+                'scan': 'scan 2s linear infinite',
+                'spin-slow': 'spin 8s linear infinite',
             },
             keyframes: {
                 'glow-pulse': {
@@ -127,6 +129,10 @@ module.exports = {
                 'hologram-flicker': {
                     '0%, 100%': { opacity: '1' },
                     '50%': { opacity: '0.95' },
+                },
+                'scan': {
+                    '0%': { transform: 'translateY(-100%)' },
+                    '100%': { transform: 'translateY(100%)' },
                 },
             },
             backgroundImage: {

@@ -12,7 +12,7 @@ export const destinations = [
         description: "Stand before the last surviving Wonder of the Ancient World. The Great Pyramid has guarded the secrets of the pharaohs for 4,500 years.",
         era: "ancient",
         region: "Cairo",
-        image: "/images/destinations/giza.jpg",
+        image: "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=800&q=80",
         highlights: ["Great Pyramid of Khufu", "Sphinx", "Sound & Light Show", "Camel Rides"],
         rating: 4.9,
         reviews: 12847,
@@ -26,7 +26,7 @@ export const destinations = [
         description: "Walk through millennia of history in the ancient city of Thebes. Colossal statues and hieroglyph-covered walls tell stories of gods and kings.",
         era: "ancient",
         region: "Luxor",
-        image: "/images/destinations/luxor.jpg",
+        image: "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&q=80",
         highlights: ["Valley of the Kings", "Karnak Temple", "Hot Air Balloons", "Nile Cruises"],
         rating: 4.8,
         reviews: 8932,
@@ -40,7 +40,7 @@ export const destinations = [
         description: "Witness the colossal temples of Ramesses II, saved from the rising waters and relocated stone by stone in humanity's greatest archaeological rescue.",
         era: "ancient",
         region: "Aswan",
-        image: "/images/destinations/abusimbel.jpg",
+        image: "https://images.unsplash.com/photo-1539650116574-8efeb43e2750?w=800&q=80",
         highlights: ["Sun Festival", "Giant Statues", "Lake Nasser", "Nubian Villages"],
         rating: 4.9,
         reviews: 5621,
@@ -54,7 +54,7 @@ export const destinations = [
         description: "Founded by Alexander the Great, this Mediterranean jewel blends Greek, Roman, and Egyptian heritage with modern coastal charm.",
         era: "hellenistic",
         region: "Alexandria",
-        image: "/images/destinations/alexandria.jpg",
+        image: "https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=800&q=80",
         highlights: ["Bibliotheca Alexandrina", "Citadel of Qaitbay", "Catacombs", "Corniche"],
         rating: 4.6,
         reviews: 6234,
@@ -68,7 +68,7 @@ export const destinations = [
         description: "An otherworldly escape where ancient Berber traditions meet salt lakes, date palms, and the mystical Oracle Temple of Amun.",
         era: "mixed",
         region: "Western Desert",
-        image: "/images/destinations/siwa.jpg",
+        image: "https://images.unsplash.com/photo-1547234935-80c7145ec969?w=800&q=80",
         highlights: ["Oracle Temple", "Cleopatra's Pool", "Salt Lakes", "Desert Safari"],
         rating: 4.7,
         reviews: 2187,
@@ -82,13 +82,14 @@ export const destinations = [
         description: "Dive into crystal-clear waters teeming with vibrant coral reefs and exotic marine life. Sun, sea, and adventure await.",
         era: "modern",
         region: "Red Sea",
-        image: "/images/destinations/redsea.jpg",
+        image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
         highlights: ["Scuba Diving", "Snorkeling", "Beach Resorts", "Desert Excursions"],
         rating: 4.8,
         reviews: 15432,
         coordinates: { lat: 27.2579, lng: 33.8116 },
     },
 ];
+
 
 export const tours = [
     {
@@ -103,7 +104,7 @@ export const tours = [
         level: "Royal",
         category: "signature",
         description: "Experience Egypt like royalty. From private pyramid access to luxury Nile cruises, this is the definitive journey through time.",
-        image: "/images/tours/pharaoh-legacy.jpg",
+        image: "https://images.unsplash.com/photo-1539650116574-8efeb43e2750?w=800&q=80",
         timeline: [
             { day: 1, title: "Arrival in Cairo", description: "VIP airport transfer, check-in at Four Seasons at Nile Plaza" },
             { day: 2, title: "Pyramids of Giza", description: "Private sunrise access to the Great Pyramid, Sphinx encounter" },
@@ -142,7 +143,7 @@ export const tours = [
         level: "Explorer",
         category: "classic",
         description: "The perfect introduction to Egypt's wonders. Explore Cairo's treasures and cruise the legendary Nile in comfort.",
-        image: "/images/tours/nile-explorer.jpg",
+        image: "https://images.unsplash.com/photo-1553913861-c0a561e721b2?w=800&q=80",
         timeline: [
             { day: 1, title: "Welcome to Cairo", description: "Airport transfer, evening orientation at hotel" },
             { day: 2, title: "Giza Plateau", description: "Pyramids, Sphinx, and Egyptian Museum" },
@@ -177,7 +178,7 @@ export const tours = [
         level: "Explorer",
         category: "adventure",
         description: "Venture into the Western Desert for an adventure unlike any other. Camp under the stars, swim in ancient springs, and discover hidden temples.",
-        image: "/images/tours/desert-oasis.jpg",
+        image: "https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800&q=80",
         timeline: [
             { day: 1, title: "Cairo to Bahariya", description: "Desert drive, Black Desert exploration" },
             { day: 2, title: "White Desert Camp", description: "Chalk formations, Bedouin dinner, stargazing" },
@@ -210,7 +211,7 @@ export const tours = [
         level: "Royal",
         category: "timegate",
         description: "Step through the Time Gate from London to ancient Egypt. Premium package includes direct flights, luxury transfers, and curated experiences.",
-        image: "/images/tours/timegate-london.jpg",
+        image: "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=800&q=80",
         timeline: [
             { day: 1, title: "Departure from London", description: "Premium lounge access, direct flight to Cairo" },
             { day: 2, title: "Cairo Immersion", description: "Egyptian Museum, Khan el-Khalili bazaar" },
@@ -249,7 +250,7 @@ export const tours = [
         level: "Royal",
         category: "timegate",
         description: "From the city of lights to the land of pharaohs. A curated journey connecting Paris directly to Luxor's ancient treasures.",
-        image: "/images/tours/timegate-paris.jpg",
+        image: "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&q=80",
         timeline: [
             { day: 1, title: "Paris Departure", description: "Charles de Gaulle premium lounge, direct flight" },
             { day: 2, title: "Luxor Arrival", description: "Check-in at Sofitel Winter Palace, orientation" },

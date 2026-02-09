@@ -31,8 +31,8 @@ export default function Header() {
         <>
             <motion.header
                 className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-                        ? 'bg-obsidian-950/90 backdrop-blur-xl border-b border-gold-500/20'
-                        : 'bg-transparent'
+                    ? 'bg-obsidian-950/90 backdrop-blur-xl border-b border-gold-500/20'
+                    : 'bg-transparent'
                     }`}
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
@@ -43,17 +43,11 @@ export default function Header() {
 
                         {/* Logo */}
                         <Link href="/" className="relative group">
-                            <motion.div
-                                className="flex items-center gap-3"
-                                whileHover={{ scale: 1.02 }}
-                            >
+                            <div className="flex items-center gap-3 hover:scale-[1.02] transition-transform">
                                 <div className="relative">
                                     <span className="text-3xl">𓂀</span>
-                                    <motion.div
-                                        className="absolute inset-0 bg-gold-500/20 rounded-full blur-xl"
-                                        animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.8, 0.5] }}
-                                        transition={{ duration: 2, repeat: Infinity }}
-                                    />
+                                    {/* Static glow - no animation */}
+                                    <div className="absolute inset-0 bg-gold-500/20 rounded-full blur-xl opacity-60 group-hover:opacity-100 transition-opacity" />
                                 </div>
                                 <div>
                                     <h1 className="font-display text-xl font-bold text-gold-500 tracking-wider">
@@ -63,7 +57,7 @@ export default function Header() {
                                         Time Travel
                                     </p>
                                 </div>
-                            </motion.div>
+                            </div>
                         </Link>
 
                         {/* Desktop Navigation */}
@@ -211,8 +205,8 @@ export default function Header() {
                                         <button
                                             key={lang.code}
                                             className={`px-4 py-2 rounded-lg border transition-colors ${currentLang.code === lang.code
-                                                    ? 'border-gold-500 bg-gold-500/10 text-gold-500'
-                                                    : 'border-gold-500/30 text-white/60 hover:border-gold-500'
+                                                ? 'border-gold-500 bg-gold-500/10 text-gold-500'
+                                                : 'border-gold-500/30 text-white/60 hover:border-gold-500'
                                                 }`}
                                             onClick={() => setCurrentLang(lang)}
                                         >

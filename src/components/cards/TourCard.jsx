@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Star, Calendar, Users, Crown, ArrowRight, Sparkles } from 'lucide-react';
+import { Star, Calendar, Users, ArrowRight, Sparkles } from 'lucide-react';
 import GlowButton from '@/components/ui/GlowButton';
 
 export default function TourCard({
@@ -13,7 +13,6 @@ export default function TourCard({
         title,
         subtitle,
         days,
-        nights,
         price,
         originalPrice,
         currency,
@@ -45,78 +44,89 @@ export default function TourCard({
     return (
         <motion.div
             className={`group relative ${featured ? 'col-span-2' : ''}`}
-            initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
         >
-            <motion.div
+            <div
                 className={`
-          relative rounded-2xl overflow-hidden
-          bg-obsidian-900/80 backdrop-blur-sm
-          border border-gold-500/20
-          hover:border-gold-500/40
-          transition-all duration-500
-          ${featured ? 'flex flex-col lg:flex-row' : ''}
-        `}
-                whileHover={{ y: -5 }}
+                    relative rounded-2xl overflow-hidden
+                    bg-obsidian-900/80 backdrop-blur-sm
+                    border border-gold-500/20
+                    hover:border-gold-500/40
+                    hover:-translate-y-1
+                    transition-all duration-300
+                    ${featured ? 'flex flex-col lg:flex-row' : ''}
+                `}
             >
                 {/* Time Gate Badge */}
                 {isTimegate && (
                     <div className="absolute top-4 left-4 z-20">
-                        <motion.div
-                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-scarab-500 to-nile-500 text-white text-xs font-bold uppercase tracking-wider"
-                            animate={{ boxShadow: ['0 0 20px rgba(20,184,166,0.5)', '0 0 40px rgba(20,184,166,0.3)', '0 0 20px rgba(20,184,166,0.5)'] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        >
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-scarab-500 to-nile-500 text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-scarab-500/30">
                             <Sparkles className="w-4 h-4" />
                             Time Gate: {departureCity}
-                        </motion.div>
+                        </div>
                     </div>
                 )}
 
-                {/* Image/Visual Area */}
-                <div className={`relative ${featured ? 'lg:w-2/5' : ''} h-48 bg-gradient-to-br from-obsidian-800 to-obsidian-900`}>
+                {/* Image/Visual Area with procedural graphics */}
+                <div className={`relative ${featured ? 'lg:w-2/5' : ''} h-48 overflow-hidden`}>
+                    {/* Dynamic gradient based on level */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${level === 'Explorer' ? 'from-teal-900 via-cyan-800 to-blue-900' :
+                        level === 'Royal' ? 'from-amber-900 via-gold-800 to-yellow-900' :
+                            'from-purple-900 via-violet-800 to-gold-900'
+                        }`} />
+
+                    {/* Sun glow */}
+                    <div className={`absolute top-6 left-8 w-20 h-20 rounded-full blur-md opacity-70 ${level === 'Explorer' ? 'bg-cyan-400' :
+                        level === 'Royal' ? 'bg-gold-400' :
+                            'bg-purple-400'
+                        }`} />
+                    <div className={`absolute top-6 left-8 w-14 h-14 rounded-full ${level === 'Explorer' ? 'bg-gradient-to-br from-cyan-200 to-cyan-400' :
+                        level === 'Royal' ? 'bg-gradient-to-br from-gold-200 to-gold-500' :
+                            'bg-gradient-to-br from-purple-200 to-purple-400'
+                        }`} />
+
+                    {/* Nile river */}
+                    <svg className="absolute bottom-0 left-0 w-full h-16 opacity-50" viewBox="0 0 400 60" preserveAspectRatio="none">
+                        <path d="M0,60 C100,40 200,50 300,35 S400,45 400,60 Z" fill="rgba(30,64,175,0.4)" />
+                        <path d="M0,60 C80,50 180,55 280,45 S400,50 400,60 Z" fill="rgba(59,130,246,0.3)" />
+                    </svg>
+
+                    {/* Temple columns silhouette */}
+                    <svg className="absolute bottom-0 right-4 w-32 h-20 opacity-40" viewBox="0 0 120 80">
+                        <rect x="10" y="20" width="8" height="60" fill="rgba(0,0,0,0.5)" />
+                        <rect x="30" y="15" width="8" height="65" fill="rgba(0,0,0,0.6)" />
+                        <rect x="50" y="10" width="8" height="70" fill="rgba(0,0,0,0.7)" />
+                        <rect x="70" y="15" width="8" height="65" fill="rgba(0,0,0,0.6)" />
+                        <rect x="90" y="20" width="8" height="60" fill="rgba(0,0,0,0.5)" />
+                        <rect x="0" y="5" width="110" height="8" fill="rgba(0,0,0,0.5)" />
+                    </svg>
+
                     {/* Level badge */}
                     <div className="absolute top-4 right-4 z-10">
-                        <span className={`px-3 py-1.5 rounded-full bg-gradient-to-r ${levelColors[level]} text-white text-xs font-bold uppercase tracking-wider`}>
+                        <span className={`px-3 py-1.5 rounded-full bg-gradient-to-r ${levelColors[level]} text-white text-xs font-bold uppercase tracking-wider shadow-lg`}>
                             {levelIcons[level]} {level}
                         </span>
                     </div>
 
-                    {/* Animated background lines */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        {[...Array(5)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                className="absolute h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"
-                                style={{ top: `${20 + i * 15}%`, width: '100%' }}
-                                animate={{ x: ['-100%', '100%'] }}
-                                transition={{ duration: 3 + i, repeat: Infinity, ease: 'linear' }}
-                            />
-                        ))}
-                    </div>
-
                     {/* Duration badge */}
                     <div className="absolute bottom-4 left-4 flex items-center gap-3">
-                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-obsidian-900/80 backdrop-blur-sm border border-gold-500/20">
-                            <Calendar className="w-4 h-4 text-gold-500" />
+                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-black/40 backdrop-blur-sm border border-white/10">
+                            <Calendar className="w-4 h-4 text-gold-400" />
                             <span className="text-white text-sm">{days} Days</span>
                         </div>
-                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-obsidian-900/80 backdrop-blur-sm border border-gold-500/20">
-                            <Users className="w-4 h-4 text-gold-500" />
+                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-black/40 backdrop-blur-sm border border-white/10">
+                            <Users className="w-4 h-4 text-gold-400" />
                             <span className="text-white text-sm">Max {maxGroup}</span>
                         </div>
                     </div>
 
-                    {/* Pyramid decoration */}
-                    <motion.div
-                        className="absolute right-4 bottom-4 text-6xl text-gold-500/20"
-                        animate={{ y: [0, -5, 0], rotate: [0, 5, 0] }}
-                        transition={{ duration: 5, repeat: Infinity }}
-                    >
+                    {/* Hourglass decoration */}
+                    <div className="absolute right-4 bottom-4 text-5xl text-white/20">
                         ⏳
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* Content */}
@@ -147,7 +157,7 @@ export default function TourCard({
                         {description}
                     </p>
 
-                    {/* Timeline preview */}
+                    {/* Timeline preview - only for featured, simplified */}
                     {featured && timeline && (
                         <div className="mb-4">
                             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
@@ -158,11 +168,7 @@ export default function TourCard({
                                             <span className="text-xs text-white/60">{day.title}</span>
                                         </div>
                                         {i < 3 && (
-                                            <motion.div
-                                                className="w-8 h-px bg-gold-500/30"
-                                                animate={{ scaleX: [0.5, 1, 0.5] }}
-                                                transition={{ duration: 2, repeat: Infinity }}
-                                            />
+                                            <div className="w-8 h-px bg-gold-500/30" />
                                         )}
                                     </div>
                                 ))}
@@ -210,12 +216,10 @@ export default function TourCard({
                 {/* Corner accents */}
                 <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-gold-500/30 rounded-tl-2xl" />
                 <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold-500/30 rounded-br-2xl" />
-            </motion.div>
+            </div>
 
-            {/* Hover glow */}
-            <motion.div
-                className="absolute -inset-1 rounded-2xl bg-gold-500/10 blur-xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity"
-            />
+            {/* Hover glow - only visible on hover via CSS */}
+            <div className="absolute -inset-1 rounded-2xl bg-gold-500/10 blur-xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
         </motion.div>
     );
 }

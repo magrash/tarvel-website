@@ -8,11 +8,12 @@ export default function CinematicLoader({ onComplete }) {
     const [isComplete, setIsComplete] = useState(false);
 
     useEffect(() => {
+        // Faster loading sequence for better UX
         const phases = [
-            { delay: 500, next: 1 },   // Start hieroglyphs
-            { delay: 2000, next: 2 },  // Draw pyramid
-            { delay: 2500, next: 3 },  // Show text
-            { delay: 3500, next: 4 },  // Fade out
+            { delay: 200, next: 1 },   // Start hieroglyphs (was 500)
+            { delay: 600, next: 2 },   // Draw pyramid (was 2000)
+            { delay: 400, next: 3 },   // Show text (was 2500)
+            { delay: 300, next: 4 },   // Fade out (was 3500)
         ];
 
         if (phase < phases.length) {
@@ -23,7 +24,7 @@ export default function CinematicLoader({ onComplete }) {
         } else {
             setIsComplete(true);
             if (onComplete) {
-                setTimeout(onComplete, 500);
+                setTimeout(onComplete, 200); // Was 500
             }
         }
     }, [phase, onComplete]);

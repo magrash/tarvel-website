@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 export default function ParticleField({
-    particleCount = 50,
+    particleCount = 30, // Reduced from 50
     colors = ['#f59e0b', '#fbbf24', '#14b8a6'],
     className = ''
 }) {
@@ -12,14 +11,24 @@ export default function ParticleField({
     const animationRef = useRef(null);
     const particlesRef = useRef([]);
     const mouseRef = useRef({ x: 0, y: 0 });
+    const lastFrameTime = useRef(0);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
+        // Detect mobile for performance optimization
+        setIsMobile(window.innerWidth < 768);
+
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true });
         let width = window.innerWidth;
         let height = window.innerHeight;
+
+        // Reduce particle count on mobile
+        const actualParticleCount = isMobile ? Math.floor(particleCount / 2) : particleCount;
+        const TARGET_FPS = 30; // Cap at 30 FPS for performance
+        const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
         const resize = () => {
             width = window.innerWidth;
@@ -29,15 +38,26 @@ export default function ParticleField({
         };
 
         resize();
-        window.addEventListener('resize', resize);
 
-        // Track mouse
-        const handleMouseMove = (e) => {
-            mouseRef.current = { x: e.clientX, y: e.clientY };
+        // Throttled resize handler
+        let resizeTimeout;
+        const handleResize = () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(resize, 100);
         };
-        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('resize', handleResize);
 
-        // Particle class
+        // Throttled mouse tracking
+        let mouseThrottled = false;
+        const handleMouseMove = (e) => {
+            if (mouseThrottled) return;
+            mouseThrottled = true;
+            mouseRef.current = { x: e.clientX, y: e.clientY };
+            setTimeout(() => { mouseThrottled = false; }, 50);
+        };
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+        // Simplified Particle class
         class Particle {
             constructor() {
                 this.reset();
@@ -46,30 +66,16 @@ export default function ParticleField({
             reset() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.alpha = Math.random() * 0.5 + 0.2;
-                this.pulse = Math.random() * Math.PI * 2;
-                this.pulseSpeed = Math.random() * 0.02 + 0.01;
+                this.alpha = Math.random() * 0.4 + 0.2;
             }
 
             update() {
-                // Mouse interaction
-                const dx = mouseRef.current.x - this.x;
-                const dy = mouseRef.current.y - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 150) {
-                    const force = (150 - dist) / 150;
-                    this.x -= (dx / dist) * force * 2;
-                    this.y -= (dy / dist) * force * 2;
-                }
-
                 this.x += this.speedX;
                 this.y += this.speedY;
-                this.pulse += this.pulseSpeed;
 
                 // Wrap around edges
                 if (this.x < 0) this.x = width;
@@ -79,73 +85,81 @@ export default function ParticleField({
             }
 
             draw(ctx) {
-                const currentAlpha = this.alpha * (0.7 + Math.sin(this.pulse) * 0.3);
-
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
-                ctx.globalAlpha = currentAlpha;
+                ctx.globalAlpha = this.alpha;
                 ctx.fill();
-
-                // Glow effect
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = this.color;
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
                 ctx.globalAlpha = 1;
             }
         }
 
         // Create particles
-        particlesRef.current = Array.from({ length: particleCount }, () => new Particle());
+        particlesRef.current = Array.from({ length: actualParticleCount }, () => new Particle());
 
-        // Draw connections between nearby particles
+        // Optimized connections - only on desktop and limited checks
         const drawConnections = () => {
-            for (let i = 0; i < particlesRef.current.length; i++) {
-                for (let j = i + 1; j < particlesRef.current.length; j++) {
-                    const p1 = particlesRef.current[i];
-                    const p2 = particlesRef.current[j];
+            if (isMobile) return; // Skip on mobile
+
+            const particles = particlesRef.current;
+            const len = particles.length;
+
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.08)';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+
+            // Only check every other particle for connections
+            for (let i = 0; i < len; i += 2) {
+                const p1 = particles[i];
+                for (let j = i + 2; j < len; j += 2) {
+                    const p2 = particles[j];
                     const dx = p1.x - p2.x;
                     const dy = p1.y - p2.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 120) {
-                        ctx.beginPath();
-                        ctx.moveTo(p1.x, p1.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(245, 158, 11, ${0.1 * (1 - dist / 120)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
+                    // Quick distance check (avoid sqrt when possible)
+                    if (Math.abs(dx) < 100 && Math.abs(dy) < 100) {
+                        const distSq = dx * dx + dy * dy;
+                        if (distSq < 10000) { // 100^2
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                        }
                     }
                 }
             }
+            ctx.stroke();
         };
 
-        // Animation loop
-        const animate = () => {
-            ctx.clearRect(0, 0, width, height);
+        // FPS-limited animation loop
+        const animate = (timestamp) => {
+            const elapsed = timestamp - lastFrameTime.current;
 
-            particlesRef.current.forEach(particle => {
-                particle.update();
-                particle.draw(ctx);
-            });
+            if (elapsed >= FRAME_INTERVAL) {
+                lastFrameTime.current = timestamp - (elapsed % FRAME_INTERVAL);
 
-            drawConnections();
+                ctx.clearRect(0, 0, width, height);
+
+                particlesRef.current.forEach(particle => {
+                    particle.update();
+                    particle.draw(ctx);
+                });
+
+                drawConnections();
+            }
 
             animationRef.current = requestAnimationFrame(animate);
         };
 
-        animate();
+        animationRef.current = requestAnimationFrame(animate);
 
         return () => {
-            window.removeEventListener('resize', resize);
+            window.removeEventListener('resize', handleResize);
             window.removeEventListener('mousemove', handleMouseMove);
+            clearTimeout(resizeTimeout);
             if (animationRef.current) {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [particleCount, colors]);
+    }, [particleCount, colors, isMobile]);
 
     return (
         <canvas

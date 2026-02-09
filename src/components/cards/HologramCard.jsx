@@ -2,13 +2,14 @@
 
 import { motion } from 'framer-motion';
 import { Star, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 export default function HologramCard({
     destination,
     index = 0,
     onClick
 }) {
-    const { name, tagline, description, era, region, rating, reviews, highlights } = destination;
+    const { name, tagline, description, era, region, rating, reviews, highlights, image } = destination;
 
     const eraColors = {
         ancient: 'from-gold-500/20 to-amber-500/20',
@@ -38,58 +39,47 @@ export default function HologramCard({
                 whileHover={{ scale: 1.02, y: -5 }}
                 onClick={onClick}
             >
-                {/* Hologram scan line */}
-                <motion.div
-                    className="absolute inset-0 bg-gradient-to-b from-transparent via-gold-500/10 to-transparent"
-                    initial={{ y: '-100%' }}
-                    animate={{ y: '100%' }}
-                    transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                {/* Hologram scan line - only on hover */}
+                <div
+                    className="absolute inset-0 bg-gradient-to-b from-transparent via-gold-500/10 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-scan transition-opacity"
                 />
 
-                {/* Image placeholder / gradient background */}
-                <div className="relative h-48 bg-gradient-to-br from-obsidian-800 to-obsidian-900 overflow-hidden">
+                {/* Destination image */}
+                <div className="relative h-48 overflow-hidden">
+                    {/* Background image */}
+                    {image ? (
+                        <img
+                            src={image}
+                            alt={name}
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                    ) : (
+                        <div className={`absolute inset-0 bg-gradient-to-br ${era === 'ancient' ? 'from-amber-900 via-orange-800 to-gold-900' :
+                            era === 'hellenistic' ? 'from-purple-900 via-indigo-800 to-gold-900' :
+                                era === 'modern' ? 'from-teal-900 via-cyan-800 to-blue-900' :
+                                    'from-gold-900 via-amber-800 to-orange-900'
+                            }`} />
+                    )}
+
+                    {/* Overlay gradient for text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/50 to-transparent" />
+
                     {/* Era badge */}
                     <div className="absolute top-4 left-4 z-10">
-                        <span className="px-3 py-1 rounded-full bg-gold-500/20 border border-gold-500/30 text-gold-500 text-xs uppercase tracking-wider">
+                        <span className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-gold-500/30 text-gold-400 text-xs uppercase tracking-wider">
                             {era}
                         </span>
                     </div>
 
                     {/* Decorative hieroglyph */}
-                    <div className="absolute top-4 right-4 text-4xl text-gold-500/20">
-                        𓂀
+                    <div className="absolute top-4 right-4 text-4xl text-white/40 drop-shadow-lg">
+                        {era === 'ancient' ? '𓂀' : era === 'hellenistic' ? '𓃭' : era === 'modern' ? '𓅃' : '𓆣'}
                     </div>
 
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-transparent to-transparent" />
-
-                    {/* Animated lines */}
-                    <svg className="absolute inset-0 w-full h-full opacity-30">
-                        <motion.line
-                            x1="0" y1="100%" x2="100%" y2="0"
-                            stroke="url(#lineGradient)"
-                            strokeWidth="1"
-                            initial={{ pathLength: 0 }}
-                            whileInView={{ pathLength: 1 }}
-                            transition={{ duration: 1.5 }}
-                        />
-                        <defs>
-                            <linearGradient id="lineGradient">
-                                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0" />
-                                <stop offset="50%" stopColor="#f59e0b" stopOpacity="1" />
-                                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-
                     {/* Floating pyramid icon */}
-                    <motion.div
-                        className="absolute bottom-4 right-4 text-6xl text-gold-500/40"
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                    >
+                    <div className="absolute bottom-4 right-4 text-5xl text-gold-500/60 group-hover:-translate-y-2 transition-transform duration-300 drop-shadow-lg">
                         △
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* Content */}

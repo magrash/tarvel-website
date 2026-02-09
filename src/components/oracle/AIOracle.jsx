@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Send, X, Sparkles } from 'lucide-react';
 
-export default function AIOracle() {
-    const [isOpen, setIsOpen] = useState(false);
+// Lazy load the chat content to avoid blocking initial render
+function OracleChat({ isOpen, onClose }) {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
@@ -31,13 +30,12 @@ export default function AIOracle() {
 
     useEffect(() => {
         if (isOpen && messages.length === 0) {
-            setTimeout(() => {
-                setIsTyping(true);
-                setTimeout(() => {
-                    setMessages([{ type: 'oracle', text: oracleResponses.greeting }]);
-                    setIsTyping(false);
-                }, 1500);
-            }, 500);
+            setIsTyping(true);
+            const timer = setTimeout(() => {
+                setMessages([{ type: 'oracle', text: oracleResponses.greeting }]);
+                setIsTyping(false);
+            }, 800);
+            return () => clearTimeout(timer);
         }
     }, [isOpen, messages.length]);
 
@@ -58,166 +56,141 @@ export default function AIOracle() {
             const response = { type: 'oracle', text: oracleResponses[intent] };
             setMessages((prev) => [...prev, response]);
             setIsTyping(false);
-        }, 1500 + Math.random() * 1000);
+        }, 800);
     };
+
+    if (!isOpen) return null;
+
+    return (
+        <div
+            className="fixed bottom-6 right-6 z-50 w-[90vw] max-w-md h-[600px] max-h-[80vh] bg-obsidian-900/95 backdrop-blur-xl rounded-2xl border border-gold-500/30 shadow-2xl overflow-hidden flex flex-col animate-fade-in-up"
+        >
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gold-500/20">
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center text-2xl">
+                            𓂀
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-scarab-500 border-2 border-obsidian-900" />
+                    </div>
+                    <div>
+                        <h3 className="font-display text-gold-500 font-semibold">AI Travel Oracle</h3>
+                        <p className="text-xs text-white/50">Guardian of Ancient Journeys</p>
+                    </div>
+                </div>
+                <button
+                    className="p-2 rounded-lg hover:bg-white/10 text-white/60 transition-colors"
+                    onClick={onClose}
+                >
+                    <X className="w-5 h-5" />
+                </button>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {messages.map((msg, i) => (
+                    <div
+                        key={i}
+                        className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                        <div
+                            className={`max-w-[80%] p-3 rounded-2xl ${msg.type === 'user'
+                                ? 'bg-gold-500 text-obsidian-950 rounded-br-md'
+                                : 'bg-obsidian-800 text-white/90 rounded-bl-md border border-gold-500/20'
+                                }`}
+                        >
+                            {msg.type === 'oracle' && (
+                                <span className="text-gold-500 mr-2">𓂀</span>
+                            )}
+                            {msg.text}
+                        </div>
+                    </div>
+                ))}
+
+                {isTyping && (
+                    <div className="flex justify-start">
+                        <div className="bg-obsidian-800 border border-gold-500/20 rounded-2xl rounded-bl-md p-3 flex items-center gap-2">
+                            <span className="text-gold-500">𓂀</span>
+                            <div className="flex gap-1">
+                                <div className="w-2 h-2 rounded-full bg-gold-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+                                <div className="w-2 h-2 rounded-full bg-gold-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+                                <div className="w-2 h-2 rounded-full bg-gold-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+                            </div>
+                        </div>
+                    </div>
+                )}
+                <div ref={messagesEndRef} />
+            </div>
+
+            {/* Quick suggestions */}
+            <div className="px-4 py-2 border-t border-gold-500/10">
+                <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                    {['Destinations', 'Tours', 'Prices', 'Book Now'].map((suggestion) => (
+                        <button
+                            key={suggestion}
+                            className="px-3 py-1.5 rounded-full border border-gold-500/30 text-gold-500 text-xs whitespace-nowrap hover:bg-gold-500/10 transition-colors"
+                            onClick={() => {
+                                setInput(suggestion);
+                                setTimeout(() => handleSend(), 100);
+                            }}
+                        >
+                            <Sparkles className="w-3 h-3 inline mr-1" />
+                            {suggestion}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Input */}
+            <div className="p-4 border-t border-gold-500/20">
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                        placeholder="Ask the Oracle..."
+                        className="flex-1 px-4 py-3 rounded-xl bg-obsidian-800 border border-gold-500/20 text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors"
+                    />
+                    <button
+                        className="p-3 rounded-xl bg-gold-500 text-obsidian-950 hover:bg-gold-400 transition-colors disabled:opacity-50"
+                        onClick={handleSend}
+                        disabled={!input.trim()}
+                    >
+                        <Send className="w-5 h-5" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default function AIOracle() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [showButton, setShowButton] = useState(false);
+
+    // Delay showing the button to not block initial render
+    useEffect(() => {
+        const timer = setTimeout(() => setShowButton(true), 2000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (!showButton) return null;
 
     return (
         <>
-            {/* Oracle Button */}
-            <motion.button
-                className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-gradient-to-r from-gold-600 to-gold-500 text-obsidian-950 shadow-lg"
+            {/* Oracle Button - simplified, no infinite animations */}
+            <button
+                className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-gradient-to-r from-gold-600 to-gold-500 text-obsidian-950 shadow-lg hover:scale-110 active:scale-95 transition-transform"
                 onClick={() => setIsOpen(true)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 2 }}
+                style={{ display: isOpen ? 'none' : 'block' }}
             >
-                <motion.div
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                >
-                    <span className="text-2xl">𓂀</span>
-                </motion.div>
-
-                {/* Glow effect */}
-                <motion.div
-                    className="absolute inset-0 rounded-full bg-gold-500"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0, 0.5] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                />
-            </motion.button>
+                <span className="text-2xl">𓂀</span>
+            </button>
 
             {/* Oracle Chat Panel */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        className="fixed bottom-6 right-6 z-50 w-[90vw] max-w-md h-[600px] max-h-[80vh] bg-obsidian-900/95 backdrop-blur-xl rounded-2xl border border-gold-500/30 shadow-2xl overflow-hidden flex flex-col"
-                        initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                    >
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-4 border-b border-gold-500/20">
-                            <div className="flex items-center gap-3">
-                                <div className="relative">
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center text-2xl">
-                                        𓂀
-                                    </div>
-                                    <motion.div
-                                        className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-scarab-500 border-2 border-obsidian-900"
-                                        animate={{ scale: [1, 1.2, 1] }}
-                                        transition={{ duration: 2, repeat: Infinity }}
-                                    />
-                                </div>
-                                <div>
-                                    <h3 className="font-display text-gold-500 font-semibold">AI Travel Oracle</h3>
-                                    <p className="text-xs text-white/50">Guardian of Ancient Journeys</p>
-                                </div>
-                            </div>
-                            <motion.button
-                                className="p-2 rounded-lg hover:bg-white/10 text-white/60"
-                                onClick={() => setIsOpen(false)}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                <X className="w-5 h-5" />
-                            </motion.button>
-                        </div>
-
-                        {/* Messages */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                            {messages.map((msg, i) => (
-                                <motion.div
-                                    key={i}
-                                    className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                >
-                                    <div
-                                        className={`max-w-[80%] p-3 rounded-2xl ${msg.type === 'user'
-                                                ? 'bg-gold-500 text-obsidian-950 rounded-br-md'
-                                                : 'bg-obsidian-800 text-white/90 rounded-bl-md border border-gold-500/20'
-                                            }`}
-                                    >
-                                        {msg.type === 'oracle' && (
-                                            <span className="text-gold-500 mr-2">𓂀</span>
-                                        )}
-                                        {msg.text}
-                                    </div>
-                                </motion.div>
-                            ))}
-
-                            {isTyping && (
-                                <motion.div
-                                    className="flex justify-start"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                >
-                                    <div className="bg-obsidian-800 border border-gold-500/20 rounded-2xl rounded-bl-md p-3 flex items-center gap-2">
-                                        <span className="text-gold-500">𓂀</span>
-                                        <div className="flex gap-1">
-                                            {[0, 1, 2].map((i) => (
-                                                <motion.div
-                                                    key={i}
-                                                    className="w-2 h-2 rounded-full bg-gold-500"
-                                                    animate={{ y: [0, -5, 0] }}
-                                                    transition={{ duration: 0.5, delay: i * 0.1, repeat: Infinity }}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
-                            <div ref={messagesEndRef} />
-                        </div>
-
-                        {/* Quick suggestions */}
-                        <div className="px-4 py-2 border-t border-gold-500/10">
-                            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-                                {['Destinations', 'Tours', 'Prices', 'Book Now'].map((suggestion) => (
-                                    <motion.button
-                                        key={suggestion}
-                                        className="px-3 py-1.5 rounded-full border border-gold-500/30 text-gold-500 text-xs whitespace-nowrap hover:bg-gold-500/10 transition-colors"
-                                        onClick={() => {
-                                            setInput(suggestion);
-                                            setTimeout(() => handleSend(), 100);
-                                        }}
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                    >
-                                        <Sparkles className="w-3 h-3 inline mr-1" />
-                                        {suggestion}
-                                    </motion.button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Input */}
-                        <div className="p-4 border-t border-gold-500/20">
-                            <div className="flex gap-2">
-                                <input
-                                    type="text"
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                                    placeholder="Ask the Oracle..."
-                                    className="flex-1 px-4 py-3 rounded-xl bg-obsidian-800 border border-gold-500/20 text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors"
-                                />
-                                <motion.button
-                                    className="p-3 rounded-xl bg-gold-500 text-obsidian-950"
-                                    onClick={handleSend}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    disabled={!input.trim()}
-                                >
-                                    <Send className="w-5 h-5" />
-                                </motion.button>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <OracleChat isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </>
     );
 }

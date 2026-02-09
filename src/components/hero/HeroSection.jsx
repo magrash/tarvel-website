@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import GlowButton from '@/components/ui/GlowButton';
 import ParticleField from './ParticleField';
+import Pyramid3D from '@/components/3d/Pyramid3D';
 
 export default function HeroSection() {
     const containerRef = useRef(null);
@@ -34,7 +35,7 @@ export default function HeroSection() {
                 <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950 via-obsidian-900 to-obsidian-950" />
 
                 {/* Particle field */}
-                <ParticleField particleCount={60} />
+                <ParticleField particleCount={25} />
 
                 {/* Radial glow */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold-500/5 rounded-full blur-3xl" />
@@ -52,54 +53,12 @@ export default function HeroSection() {
                 />
             </div>
 
-            {/* Animated pyramid silhouette */}
+            {/* 3D Rotating Pyramid */}
             <motion.div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 z-0"
+                className="absolute bottom-20 left-1/2 -translate-x-1/2 z-0"
                 style={{ y }}
             >
-                <svg
-                    width="800"
-                    height="400"
-                    viewBox="0 0 800 400"
-                    className="opacity-20"
-                >
-                    {/* Main pyramid */}
-                    <motion.path
-                        d="M400 50 L700 350 L100 350 Z"
-                        fill="none"
-                        stroke="url(#pyramidGradient)"
-                        strokeWidth="2"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 2, delay: 0.5 }}
-                    />
-                    {/* Second pyramid */}
-                    <motion.path
-                        d="M550 100 L750 350 L350 350 Z"
-                        fill="none"
-                        stroke="url(#pyramidGradient)"
-                        strokeWidth="1.5"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 2, delay: 0.8 }}
-                    />
-                    {/* Third pyramid */}
-                    <motion.path
-                        d="M250 120 L450 350 L50 350 Z"
-                        fill="none"
-                        stroke="url(#pyramidGradient)"
-                        strokeWidth="1"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 2, delay: 1.1 }}
-                    />
-                    <defs>
-                        <linearGradient id="pyramidGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#f59e0b" />
-                            <stop offset="100%" stopColor="#78350f" />
-                        </linearGradient>
-                    </defs>
-                </svg>
+                <Pyramid3D size={250} />
             </motion.div>
 
             {/* Main content */}
