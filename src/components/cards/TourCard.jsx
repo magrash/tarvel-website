@@ -43,7 +43,7 @@ export default function TourCard({
 
     return (
         <motion.div
-            className={`group relative ${featured ? 'col-span-2' : ''}`}
+            className={`group relative ${featured ? 'lg:col-span-2' : ''}`}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -71,7 +71,7 @@ export default function TourCard({
                 )}
 
                 {/* Image/Visual Area with procedural graphics */}
-                <div className={`relative ${featured ? 'lg:w-2/5' : ''} h-48 overflow-hidden`}>
+                <div className={`relative ${featured ? 'lg:w-2/5' : ''} h-40 sm:h-48 overflow-hidden`}>
                     {/* Dynamic gradient based on level */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${level === 'Explorer' ? 'from-teal-900 via-cyan-800 to-blue-900' :
                         level === 'Royal' ? 'from-amber-900 via-gold-800 to-yellow-900' :
@@ -145,7 +145,7 @@ export default function TourCard({
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-display text-2xl text-white mb-1 group-hover:text-gold-500 transition-colors">
+                    <h3 className="font-display text-xl sm:text-2xl text-white mb-1 group-hover:text-gold-500 transition-colors">
                         {title}
                     </h3>
                     <p className="text-gold-500/80 text-sm italic mb-3">
@@ -192,7 +192,7 @@ export default function TourCard({
                     </div>
 
                     {/* Price & CTA */}
-                    <div className="flex items-end justify-between">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3">
                         <div>
                             {originalPrice && (
                                 <span className="text-sm text-white/40 line-through mr-2">
@@ -200,7 +200,7 @@ export default function TourCard({
                                 </span>
                             )}
                             <div className="flex items-baseline gap-1">
-                                <span className="text-3xl font-display text-gold-500">
+                                <span className="text-2xl sm:text-3xl font-display text-gold-500">
                                     {currency === 'GBP' ? '£' : '€'}{price.toLocaleString()}
                                 </span>
                                 <span className="text-sm text-white/40">/person</span>

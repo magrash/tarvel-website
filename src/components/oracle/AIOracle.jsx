@@ -63,7 +63,7 @@ function OracleChat({ isOpen, onClose }) {
 
     return (
         <div
-            className="fixed bottom-6 right-6 z-50 w-[90vw] max-w-md h-[600px] max-h-[80vh] bg-obsidian-900/95 backdrop-blur-xl rounded-2xl border border-gold-500/30 shadow-2xl overflow-hidden flex flex-col animate-fade-in-up"
+            className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[90vw] sm:max-w-md h-[85vh] sm:h-[600px] sm:max-h-[80vh] bg-obsidian-900/95 backdrop-blur-xl rounded-t-2xl sm:rounded-2xl border border-gold-500/30 shadow-2xl overflow-hidden flex flex-col animate-fade-in-up"
         >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gold-500/20">
@@ -151,7 +151,7 @@ function OracleChat({ isOpen, onClose }) {
                         onChange={(e) => setInput(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                         placeholder="Ask the Oracle..."
-                        className="flex-1 px-4 py-3 rounded-xl bg-obsidian-800 border border-gold-500/20 text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors"
+                        className="flex-1 px-4 py-3 rounded-xl bg-obsidian-800 border border-gold-500/20 text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500 transition-colors text-base"
                     />
                     <button
                         className="p-3 rounded-xl bg-gold-500 text-obsidian-950 hover:bg-gold-400 transition-colors disabled:opacity-50"

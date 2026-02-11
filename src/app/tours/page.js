@@ -24,10 +24,9 @@ export default function ToursPage() {
 
     const categoryFilters = [
         { id: 'all', label: 'All Tours' },
-        { id: 'signature', label: 'Signature' },
-        { id: 'classic', label: 'Classic' },
-        { id: 'adventure', label: 'Adventure' },
-        { id: 'timegate', label: '⚡ Time Gate' },
+        { id: 'full-day', label: 'Full-Day' },
+        { id: 'half-day', label: 'Half-Day' },
+        { id: 'package', label: 'Packages' },
     ];
 
     const filteredTours = tours.filter((tour) => {
@@ -104,8 +103,8 @@ export default function ToursPage() {
                                     <motion.button
                                         key={filter.id}
                                         className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all ${activeLevel === filter.id
-                                                ? 'bg-gold-500 text-obsidian-950 font-semibold'
-                                                : 'border border-gold-500/30 text-white/70 hover:border-gold-500'
+                                            ? 'bg-gold-500 text-obsidian-950 font-semibold'
+                                            : 'border border-gold-500/30 text-white/70 hover:border-gold-500'
                                             }`}
                                         onClick={() => setActiveLevel(filter.id)}
                                         whileHover={{ scale: 1.02 }}
@@ -125,8 +124,8 @@ export default function ToursPage() {
                                     <motion.button
                                         key={filter.id}
                                         className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all ${activeCategory === filter.id
-                                                ? 'bg-scarab-500 text-white font-semibold'
-                                                : 'border border-gold-500/30 text-white/70 hover:border-gold-500'
+                                            ? 'bg-scarab-500 text-white font-semibold'
+                                            : 'border border-gold-500/30 text-white/70 hover:border-gold-500'
                                             }`}
                                         onClick={() => setActiveCategory(filter.id)}
                                         whileHover={{ scale: 1.02 }}

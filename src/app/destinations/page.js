@@ -15,15 +15,19 @@ export default function DestinationsPage() {
     const [searchQuery, setSearchQuery] = useState('');
 
     const filters = [
-        { id: 'all', label: 'All Destinations' },
-        { id: 'ancient', label: 'Ancient Wonders' },
-        { id: 'hellenistic', label: 'Hellenistic Era' },
-        { id: 'modern', label: 'Modern Egypt' },
-        { id: 'mixed', label: 'Mixed Heritage' },
+        { id: 'all', label: 'All Locations', tooltip: 'View all destinations' },
+        { id: 'Cairo', label: 'Cairo', tooltip: 'Capital of culture and Islamic history' },
+        { id: 'Giza', label: 'Giza', tooltip: 'Home of the Great Pyramids and Sphinx' },
+        { id: 'Luxor', label: 'Luxor', tooltip: "The world's largest open-air museum" },
+        { id: 'Aswan', label: 'Aswan', tooltip: 'Serene landscapes and Nubian culture' },
+        { id: 'Alexandria', label: 'Alexandria', tooltip: 'Pearl of the Mediterranean' },
+        { id: 'Siwa', label: 'Siwa', tooltip: 'Mystical oasis of Alexander the Great' },
+        { id: 'Fayoum', label: 'Fayoum', tooltip: 'Ancient nature and fossil wonders' },
+        { id: 'Sinai', label: 'Sinai', tooltip: 'Spiritual peaks and Red Sea reefs' },
     ];
 
     const filteredDestinations = destinations.filter((dest) => {
-        const matchesFilter = activeFilter === 'all' || dest.era === activeFilter;
+        const matchesFilter = activeFilter === 'all' || dest.region === activeFilter;
         const matchesSearch = dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             dest.region.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesFilter && matchesSearch;
@@ -37,13 +41,13 @@ export default function DestinationsPage() {
 
             <main className="min-h-screen bg-obsidian-950">
                 {/* Hero Section */}
-                <section className="relative pt-32 pb-20 overflow-hidden">
+                <section className="relative pt-24 sm:pt-32 pb-12 sm:pb-20 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950 via-obsidian-900 to-obsidian-950" />
 
                     {/* Decorative background */}
                     <div className="absolute inset-0 opacity-10">
                         <motion.div
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[400px] text-gold-500"
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[200px] sm:text-[400px] text-gold-500"
                             animate={{ rotate: 360 }}
                             transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
                         >
@@ -51,7 +55,7 @@ export default function DestinationsPage() {
                         </motion.div>
                     </div>
 
-                    <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -60,10 +64,10 @@ export default function DestinationsPage() {
                             <span className="inline-block text-scarab-500 text-sm tracking-[0.3em] uppercase mb-4">
                                 Explore the Ages
                             </span>
-                            <h1 className="font-display text-5xl md:text-7xl text-white mb-6">
+                            <h1 className="font-display text-3xl sm:text-5xl md:text-7xl text-white mb-4 sm:mb-6">
                                 Legendary <span className="text-gradient-gold">Destinations</span>
                             </h1>
-                            <p className="text-white/60 text-lg max-w-2xl mx-auto mb-10">
+                            <p className="text-white/60 text-sm sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-10">
                                 From the ancient wonders of Giza to the crystal waters of the Red Sea,
                                 discover locations that have captivated travelers for millennia.
                             </p>
@@ -76,7 +80,7 @@ export default function DestinationsPage() {
                                     placeholder="Search destinations..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-12 pr-6 py-4 rounded-xl bg-obsidian-900/80 border border-gold-500/20 text-white placeholder:text-white/40 focus:outline-none focus:border-gold-500 transition-colors"
+                                    className="w-full pl-10 sm:pl-12 pr-4 sm:pr-6 py-3 sm:py-4 rounded-xl bg-obsidian-900/80 border border-gold-500/20 text-white placeholder:text-white/40 focus:outline-none focus:border-gold-500 transition-colors text-sm sm:text-base"
                                 />
                             </div>
                         </motion.div>
@@ -84,22 +88,28 @@ export default function DestinationsPage() {
                 </section>
 
                 {/* Filters Section */}
-                <section className="py-8 border-y border-gold-500/10">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                        <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pb-2">
+                <section className="py-4 sm:py-8 border-y border-gold-500/10">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto no-scrollbar pb-2">
                             <Filter className="w-5 h-5 text-gold-500 shrink-0" />
                             {filters.map((filter) => (
                                 <motion.button
                                     key={filter.id}
-                                    className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${activeFilter === filter.id
-                                            ? 'bg-gold-500 text-obsidian-950 font-semibold'
-                                            : 'border border-gold-500/30 text-white/70 hover:border-gold-500'
+                                    className={`group relative shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg whitespace-nowrap transition-all text-xs sm:text-sm ${activeFilter === filter.id
+                                        ? 'bg-gold-500 text-obsidian-950 font-semibold'
+                                        : 'border border-gold-500/30 text-white/70 hover:border-gold-500'
                                         }`}
                                     onClick={() => setActiveFilter(filter.id)}
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
                                     {filter.label}
+
+                                    {/* Tooltip */}
+                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-obsidian-800 border border-gold-500/30 text-gold-500 text-[10px] sm:text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 whitespace-nowrap">
+                                        {filter.tooltip}
+                                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-obsidian-800" />
+                                    </div>
                                 </motion.button>
                             ))}
                         </div>
@@ -107,10 +117,10 @@ export default function DestinationsPage() {
                 </section>
 
                 {/* Destinations Grid */}
-                <section className="py-16">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <section className="py-8 sm:py-16">
+                    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
                         {filteredDestinations.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-8">
                                 {filteredDestinations.map((destination, index) => (
                                     <HologramCard
                                         key={destination.id}
@@ -134,10 +144,10 @@ export default function DestinationsPage() {
                 </section>
 
                 {/* Map Section Placeholder */}
-                <section className="py-16 bg-obsidian-900/50">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <section className="py-8 sm:py-16 bg-obsidian-900/50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <motion.div
-                            className="relative h-96 rounded-2xl bg-gradient-to-br from-obsidian-800 to-obsidian-900 border border-gold-500/20 overflow-hidden flex items-center justify-center"
+                            className="relative h-64 sm:h-96 rounded-2xl bg-gradient-to-br from-obsidian-800 to-obsidian-900 border border-gold-500/20 overflow-hidden flex items-center justify-center"
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}

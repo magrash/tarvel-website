@@ -1,11 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CinematicLoader({ onComplete }) {
     const [phase, setPhase] = useState(0);
     const [isComplete, setIsComplete] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Pre-generate stable random positions (only computed once on client)
+    const particlePositions = useMemo(() => {
+        if (typeof window === 'undefined') return [];
+        return Array.from({ length: 20 }, () => ({
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            delay: Math.random() * 2,
+        }));
+    }, []);
 
     useEffect(() => {
         // Faster loading sequence for better UX
@@ -40,15 +55,15 @@ export default function CinematicLoader({ onComplete }) {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.8 }}
                 >
-                    {/* Background particles */}
+                    {/* Background particles - only render after mount */}
                     <div className="absolute inset-0 overflow-hidden">
-                        {[...Array(20)].map((_, i) => (
+                        {mounted && particlePositions.map((pos, i) => (
                             <motion.div
                                 key={i}
                                 className="absolute w-1 h-1 bg-gold-500 rounded-full"
                                 style={{
-                                    left: `${Math.random() * 100}%`,
-                                    top: `${Math.random() * 100}%`,
+                                    left: pos.left,
+                                    top: pos.top,
                                 }}
                                 animate={{
                                     opacity: [0, 0.5, 0],
@@ -56,7 +71,7 @@ export default function CinematicLoader({ onComplete }) {
                                 }}
                                 transition={{
                                     duration: 3,
-                                    delay: Math.random() * 2,
+                                    delay: pos.delay,
                                     repeat: Infinity,
                                 }}
                             />

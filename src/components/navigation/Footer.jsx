@@ -7,6 +7,7 @@ import {
     Instagram,
     Twitter,
     Youtube,
+    MessageCircle,
     Mail,
     Phone,
     MapPin,
@@ -23,17 +24,20 @@ export default function Footer() {
             { name: 'Experiences', href: '/#experiences' },
             { name: 'Time Gate Deals', href: '/tours#timegate' },
         ],
-        company: [
-            { name: 'About Goba', href: '/about' },
-            { name: 'Our Story', href: '/story' },
-            { name: 'Testimonials', href: '/#testimonials' },
-            { name: 'Careers', href: '/careers' },
+        destinations: [
+            { name: 'Giza', href: '/destinations?region=Giza' },
+            { name: 'Cairo', href: '/destinations?region=Cairo' },
+            { name: 'Luxor', href: '/destinations?region=Luxor' },
+            { name: 'Aswan', href: '/destinations?region=Aswan' },
+            { name: 'Alexandria', href: '/destinations?region=Alexandria' },
+            { name: 'Siwa', href: '/destinations?region=Siwa' },
         ],
-        support: [
-            { name: 'Contact Us', href: '/contact' },
-            { name: 'FAQs', href: '/faqs' },
-            { name: 'Travel Insurance', href: '/insurance' },
-            { name: 'Visa Guide', href: '/visa' },
+        tours: [
+            { name: 'Full-Day Tours', href: '/tours?type=full-day' },
+            { name: 'Half-Day Tours', href: '/tours?type=half-day' },
+            { name: 'Packages', href: '/tours?type=package' },
+            { name: 'Fayoum', href: '/destinations?region=Fayoum' },
+            { name: 'St. Catherine', href: '/destinations?region=Sinai' },
         ],
         legal: [
             { name: 'Privacy Policy', href: '/privacy' },
@@ -46,7 +50,7 @@ export default function Footer() {
     const socialLinks = [
         { icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
         { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
-        { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
+        { icon: MessageCircle, href: 'https://wa.me/201234567890', label: 'WhatsApp' },
         { icon: Youtube, href: 'https://youtube.com', label: 'YouTube' },
     ];
 
@@ -57,24 +61,24 @@ export default function Footer() {
 
             {/* Newsletter Section */}
             <div className="border-b border-gold-500/10">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
                     <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
                         <div className="text-center lg:text-left">
-                            <h3 className="font-display text-2xl text-gold-500 mb-2">
+                            <h3 className="font-display text-xl sm:text-2xl text-gold-500 mb-2">
                                 Join the Time Travelers
                             </h3>
                             <p className="text-white/60">
                                 Receive exclusive offers and ancient secrets directly to your inbox.
                             </p>
                         </div>
-                        <div className="flex w-full lg:w-auto max-w-md">
+                        <div className="flex flex-col sm:flex-row w-full lg:w-auto max-w-md gap-2 sm:gap-0">
                             <input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="flex-1 px-6 py-3 bg-obsidian-900 border border-gold-500/30 rounded-l-lg text-white placeholder:text-white/40 focus:outline-none focus:border-gold-500 transition-colors"
+                                className="flex-1 px-4 sm:px-6 py-3 bg-obsidian-900 border border-gold-500/30 rounded-lg sm:rounded-l-lg sm:rounded-r-none text-white placeholder:text-white/40 focus:outline-none focus:border-gold-500 transition-colors text-sm sm:text-base"
                             />
                             <motion.button
-                                className="px-6 py-3 bg-gold-500 text-obsidian-950 font-display font-semibold tracking-wider rounded-r-lg flex items-center gap-2"
+                                className="px-6 py-3 bg-gold-500 text-obsidian-950 font-display font-semibold tracking-wider rounded-lg sm:rounded-l-none sm:rounded-r-lg flex items-center justify-center gap-2 text-sm sm:text-base"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
@@ -87,8 +91,8 @@ export default function Footer() {
             </div>
 
             {/* Main Footer Content */}
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 lg:gap-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-8">
 
                     {/* Brand Column */}
                     <div className="lg:col-span-2">
@@ -165,10 +169,10 @@ export default function Footer() {
 
                     <div>
                         <h4 className="font-display text-gold-500 tracking-wider uppercase mb-4">
-                            Company
+                            Locations
                         </h4>
                         <ul className="space-y-3">
-                            {footerLinks.company.map((link) => (
+                            {footerLinks.destinations.map((link) => (
                                 <li key={link.name}>
                                     <Link
                                         href={link.href}
@@ -183,10 +187,10 @@ export default function Footer() {
 
                     <div>
                         <h4 className="font-display text-gold-500 tracking-wider uppercase mb-4">
-                            Support
+                            Tours
                         </h4>
                         <ul className="space-y-3">
-                            {footerLinks.support.map((link) => (
+                            {footerLinks.tours.map((link) => (
                                 <li key={link.name}>
                                     <Link
                                         href={link.href}
@@ -226,7 +230,7 @@ export default function Footer() {
                         <p className="text-white/40 text-sm text-center md:text-left">
                             © {currentYear} Goba Travel. All rights reserved. ATOL Protected.
                         </p>
-                        <div className="flex items-center gap-6 text-white/40 text-sm">
+                        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-white/40 text-xs sm:text-sm">
                             <span>🇬🇧 UK Registered</span>
                             <span>|</span>
                             <span>Secure Payments</span>

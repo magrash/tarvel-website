@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 
 export default function ParticleField({
     particleCount = 30, // Reduced from 50
@@ -171,26 +172,47 @@ export default function ParticleField({
 
 // Floating dust particles (CSS-based, lighter weight)
 export function DustParticles({ count = 30 }) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Pre-generate stable random values
+    const particles = useMemo(() => {
+        if (typeof window === 'undefined') return [];
+        return Array.from({ length: count }, () => ({
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            xMid: Math.random() * 50 - 25,
+            xEnd: Math.random() * 100 - 50,
+            duration: 10 + Math.random() * 10,
+            delay: Math.random() * 10,
+        }));
+    }, [count]);
+
+    if (!mounted) return null;
+
     return (
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-            {[...Array(count)].map((_, i) => (
+            {particles.map((p, i) => (
                 <motion.div
                     key={i}
                     className="absolute w-1 h-1 bg-gold-500 rounded-full"
                     style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
+                        left: p.left,
+                        top: p.top,
                     }}
                     animate={{
                         y: [0, -100, -200],
-                        x: [0, Math.random() * 50 - 25, Math.random() * 100 - 50],
+                        x: [0, p.xMid, p.xEnd],
                         opacity: [0, 0.6, 0],
                         scale: [0.5, 1, 0.5],
                     }}
                     transition={{
-                        duration: 10 + Math.random() * 10,
+                        duration: p.duration,
                         repeat: Infinity,
-                        delay: Math.random() * 10,
+                        delay: p.delay,
                         ease: 'linear',
                     }}
                 />

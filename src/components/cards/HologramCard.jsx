@@ -45,7 +45,7 @@ export default function HologramCard({
                 />
 
                 {/* Destination image */}
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-32 xs:h-36 sm:h-40 md:h-48 overflow-hidden">
                     {/* Background image */}
                     {image ? (
                         <img
@@ -66,53 +66,53 @@ export default function HologramCard({
 
                     {/* Era badge */}
                     <div className="absolute top-4 left-4 z-10">
-                        <span className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-gold-500/30 text-gold-400 text-xs uppercase tracking-wider">
+                        <span className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-black/40 backdrop-blur-sm border border-gold-500/30 text-gold-400 text-[10px] sm:text-xs uppercase tracking-wider font-semibold">
                             {era}
                         </span>
                     </div>
 
                     {/* Decorative hieroglyph */}
-                    <div className="absolute top-4 right-4 text-4xl text-white/40 drop-shadow-lg">
+                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 text-2xl sm:text-4xl text-white/40 drop-shadow-lg">
                         {era === 'ancient' ? '𓂀' : era === 'hellenistic' ? '𓃭' : era === 'modern' ? '𓅃' : '𓆣'}
                     </div>
 
                     {/* Floating pyramid icon */}
-                    <div className="absolute bottom-4 right-4 text-5xl text-gold-500/60 group-hover:-translate-y-2 transition-transform duration-300 drop-shadow-lg">
+                    <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 text-3xl sm:text-5xl text-gold-500/60 group-hover:-translate-y-2 transition-transform duration-300 drop-shadow-lg">
                         △
                     </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-3 sm:p-4 md:p-6">
                     <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gold-500/60 tracking-wider uppercase">
+                        <span className="text-[10px] sm:text-sm text-gold-500/60 tracking-wider uppercase">
                             {region}
                         </span>
                         <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 text-gold-500 fill-gold-500" />
-                            <span className="text-sm text-gold-500">{rating}</span>
-                            <span className="text-xs text-white/40">({reviews.toLocaleString()})</span>
+                            <Star className="w-3 h-3 sm:w-4 sm:h-4 text-gold-500 fill-gold-500" />
+                            <span className="text-[11px] sm:text-sm text-gold-500">{rating}</span>
+                            <span className="text-[10px] sm:text-xs text-white/40">({reviews.toLocaleString()})</span>
                         </div>
                     </div>
 
-                    <h3 className="font-display text-2xl text-white mb-2 group-hover:text-gold-500 transition-colors">
+                    <h3 className="font-display text-sm xs:text-base sm:text-xl md:text-2xl text-white mb-1 sm:mb-2 group-hover:text-gold-500 transition-colors leading-tight">
                         {name}
                     </h3>
 
-                    <p className="text-gold-500/80 text-sm italic mb-3">
+                    <p className="text-gold-500/80 text-[11px] sm:text-sm italic mb-1 sm:mb-3">
                         "{tagline}"
                     </p>
 
-                    <p className="text-white/60 text-sm line-clamp-2 mb-4">
+                    <p className="text-white/60 text-[11px] sm:text-sm line-clamp-2 mb-2 sm:mb-4 hidden xs:block">
                         {description}
                     </p>
 
                     {/* Highlights */}
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-4">
                         {highlights?.slice(0, 3).map((highlight, i) => (
                             <span
                                 key={i}
-                                className="px-2 py-1 text-xs bg-white/5 text-white/60 rounded"
+                                className="px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs bg-white/5 text-white/60 rounded"
                             >
                                 {highlight}
                             </span>
@@ -121,7 +121,7 @@ export default function HologramCard({
 
                     {/* CTA */}
                     <motion.div
-                        className="flex items-center gap-2 text-gold-500 font-display text-sm tracking-wider"
+                        className="flex items-center gap-1 sm:gap-2 text-gold-500 font-display text-[11px] sm:text-sm tracking-wider"
                         whileHover={{ x: 5 }}
                     >
                         <span>Explore</span>

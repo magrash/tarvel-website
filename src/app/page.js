@@ -36,13 +36,13 @@ export default function HomePage() {
                     <HeroSection />
 
                     {/* Featured Destinations Section */}
-                    <section className="py-24 relative overflow-hidden">
+                    <section className="py-12 sm:py-24 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950 via-obsidian-900 to-obsidian-950" />
 
-                        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+                        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             {/* Section Header */}
                             <motion.div
-                                className="text-center mb-16"
+                                className="text-center mb-10 sm:mb-16"
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
@@ -55,17 +55,17 @@ export default function HomePage() {
                                 >
                                     Explore the Ages
                                 </motion.span>
-                                <h2 className="font-display text-4xl md:text-5xl text-white mb-4">
+                                <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-white mb-4">
                                     Legendary <span className="text-gradient-gold">Destinations</span>
                                 </h2>
-                                <p className="text-white/60 max-w-2xl mx-auto">
+                                <p className="text-white/60 max-w-2xl mx-auto text-sm sm:text-base">
                                     From the ancient wonders of Giza to the crystal waters of the Red Sea,
                                     discover locations that have captivated travelers for millennia.
                                 </p>
                             </motion.div>
 
                             {/* Destinations Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-8">
                                 {destinations.slice(0, 6).map((destination, index) => (
                                     <HologramCard
                                         key={destination.id}
@@ -98,7 +98,7 @@ export default function HomePage() {
                     </section>
 
                     {/* Experience Levels Section */}
-                    <section className="py-24 relative overflow-hidden">
+                    <section className="py-12 sm:py-24 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-obsidian-950 via-obsidian-900 to-obsidian-950" />
 
                         {/* Background pattern */}
@@ -109,7 +109,7 @@ export default function HomePage() {
                             }} />
                         </div>
 
-                        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+                        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <motion.div
                                 className="text-center mb-16"
                                 initial={{ opacity: 0, y: 30 }}
@@ -119,7 +119,7 @@ export default function HomePage() {
                                 <span className="inline-block text-gold-500 text-sm tracking-[0.3em] uppercase mb-4">
                                     Choose Your Path
                                 </span>
-                                <h2 className="font-display text-4xl md:text-5xl text-white mb-4">
+                                <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-white mb-4">
                                     Experience <span className="text-gradient-gold">Levels</span>
                                 </h2>
                                 <p className="text-white/60 max-w-2xl mx-auto">
@@ -129,7 +129,7 @@ export default function HomePage() {
                             </motion.div>
 
                             {/* Experience Cards */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                                 {experiences.map((exp, index) => (
                                     <motion.div
                                         key={exp.id}
@@ -141,7 +141,7 @@ export default function HomePage() {
                                     >
                                         <motion.div
                                             className={`
-                        relative p-8 rounded-2xl
+                        relative p-5 sm:p-8 rounded-2xl
                         bg-gradient-to-br from-obsidian-900/80 to-obsidian-800/80
                         border border-gold-500/20
                         backdrop-blur-sm
@@ -210,10 +210,10 @@ export default function HomePage() {
                     </section>
 
                     {/* Featured Tours Section */}
-                    <section className="py-24 relative overflow-hidden">
+                    <section className="py-12 sm:py-24 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950 via-obsidian-900 to-obsidian-950" />
 
-                        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+                        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <motion.div
                                 className="text-center mb-16"
                                 initial={{ opacity: 0, y: 30 }}
@@ -223,7 +223,7 @@ export default function HomePage() {
                                 <span className="inline-block text-scarab-500 text-sm tracking-[0.3em] uppercase mb-4">
                                     Curated Journeys
                                 </span>
-                                <h2 className="font-display text-4xl md:text-5xl text-white mb-4">
+                                <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-white mb-4">
                                     Signature <span className="text-gradient-gold">Tours</span>
                                 </h2>
                                 <p className="text-white/60 max-w-2xl mx-auto">
@@ -246,7 +246,7 @@ export default function HomePage() {
 
                             {/* Time Gate Banner */}
                             <motion.div
-                                className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-scarab-900/50 via-nile-900/50 to-scarab-900/50 border border-scarab-500/30 relative overflow-hidden"
+                                className="mt-10 sm:mt-16 p-4 sm:p-8 rounded-2xl bg-gradient-to-r from-scarab-900/50 via-nile-900/50 to-scarab-900/50 border border-scarab-500/30 relative overflow-hidden"
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
@@ -262,7 +262,7 @@ export default function HomePage() {
                                     <div>
                                         <div className="flex items-center gap-3 mb-2">
                                             <span className="text-3xl">⚡</span>
-                                            <h3 className="font-display text-2xl text-white">
+                                            <h3 className="font-display text-xl sm:text-2xl text-white">
                                                 Europe → Egypt <span className="text-scarab-400">Time Gate</span>
                                             </h3>
                                         </div>
@@ -281,10 +281,10 @@ export default function HomePage() {
                     </section>
 
                     {/* Testimonials Section */}
-                    <section className="py-24 relative overflow-hidden">
+                    <section className="py-12 sm:py-24 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-b from-obsidian-900 to-obsidian-950" />
 
-                        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+                        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <motion.div
                                 className="text-center mb-16"
                                 initial={{ opacity: 0, y: 30 }}
@@ -294,13 +294,13 @@ export default function HomePage() {
                                 <span className="inline-block text-gold-500 text-sm tracking-[0.3em] uppercase mb-4">
                                     Time Travelers Speak
                                 </span>
-                                <h2 className="font-display text-4xl md:text-5xl text-white mb-4">
+                                <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-white mb-4">
                                     What Our <span className="text-gradient-gold">Explorers</span> Say
                                 </h2>
                             </motion.div>
 
                             {/* Testimonials Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                                 {testimonials.map((testimonial, index) => (
                                     <motion.div
                                         key={testimonial.id}
@@ -338,14 +338,67 @@ export default function HomePage() {
                         </div>
                     </section>
 
+                    {/* Client Gallery Section */}
+                    <section className="py-12 sm:py-24 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950 via-obsidian-900 to-obsidian-950" />
+
+                        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <motion.div
+                                className="text-center mb-16"
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                            >
+                                <span className="inline-block text-gold-500 text-sm tracking-[0.3em] uppercase mb-4">
+                                    Our Clients' Experiences
+                                </span>
+                                <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-white mb-4">
+                                    Captured <span className="text-gradient-gold">Moments</span>
+                                </h2>
+                                <p className="text-white/60 max-w-2xl mx-auto">
+                                    Real stories from real travelers. These are the moments that define the Goba Travel experience.
+                                </p>
+                            </motion.div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {[
+                                    { src: "https://images.unsplash.com/photo-1539768942893-daf53e448371?w=800&q=80", alt: "Pyramids Adventure" },
+                                    { src: "https://images.unsplash.com/photo-1547448415-e9f5b28e570d?w=800&q=80", alt: "Nile Cruise" },
+                                    { src: "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=800&q=80", alt: "Luxor Temple" },
+                                    { src: "https://images.unsplash.com/photo-1445217143695-46712403d776?w=800&q=80", alt: "Desert Safari" },
+                                    { src: "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&q=80", alt: "Old Cairo" },
+                                    { src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80", alt: "Red Sea" },
+                                    { src: "https://images.unsplash.com/photo-1539109132314-347752418b7b?w=800&q=80", alt: "Aswan View" },
+                                    { src: "https://images.unsplash.com/photo-1552423814-24852103d6d5?w=800&q=80", alt: "Egyptian Market" },
+                                ].map((img, index) => (
+                                    <motion.div
+                                        key={index}
+                                        className="relative aspect-square overflow-hidden rounded-xl border border-gold-500/20 group"
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        whileInView={{ opacity: 1, scale: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: index * 0.1 }}
+                                    >
+                                        <img
+                                            src={img.src}
+                                            alt={img.alt}
+                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"
+                                        />
+                                        <div className="absolute inset-0 bg-obsidian-950/20 group-hover:bg-transparent transition-colors duration-300" />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
                     {/* CTA Section */}
-                    <section className="py-24 relative overflow-hidden">
+                    <section className="py-12 sm:py-24 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-gold-900/20 via-obsidian-950 to-scarab-900/20" />
 
                         {/* Animated pyramids background */}
                         <div className="absolute inset-0 flex items-center justify-center opacity-10">
                             <motion.div
-                                className="text-[300px] text-gold-500"
+                                className="text-[150px] sm:text-[300px] text-gold-500"
                                 animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
                                 transition={{ duration: 10, repeat: Infinity }}
                             >
@@ -353,17 +406,17 @@ export default function HomePage() {
                             </motion.div>
                         </div>
 
-                        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+                        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                             >
                                 <span className="text-6xl mb-6 block">𓂀</span>
-                                <h2 className="font-display text-4xl md:text-6xl text-white mb-6">
+                                <h2 className="font-display text-3xl sm:text-4xl md:text-6xl text-white mb-4 sm:mb-6">
                                     Ready to <span className="text-gradient-gold">Travel Through Time?</span>
                                 </h2>
-                                <p className="text-white/60 text-lg mb-10 max-w-2xl mx-auto">
+                                <p className="text-white/60 text-sm sm:text-lg mb-8 sm:mb-10 max-w-2xl mx-auto">
                                     Your journey across 5000 years of history awaits. Step through the portal
                                     and discover the Egypt that lives beyond the ages.
                                 </p>

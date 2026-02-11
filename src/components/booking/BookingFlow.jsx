@@ -24,7 +24,8 @@ export default function BookingFlow({ preselectedTour = null }) {
         { label: 'Timeline', sublabel: 'Choose duration' },
         { label: 'Companions', sublabel: 'How many travelers' },
         { label: 'Experience', sublabel: 'Select your level' },
-        { label: 'Complete', sublabel: 'Confirm booking' },
+        { label: 'Details', sublabel: 'Travel details' },
+        { label: 'Review', sublabel: 'Confirm booking' },
     ];
 
     const durations = [
@@ -63,7 +64,7 @@ export default function BookingFlow({ preselectedTour = null }) {
     ];
 
     const handleNext = () => {
-        if (currentStep < 4) setCurrentStep(currentStep + 1);
+        if (currentStep < 5) setCurrentStep(currentStep + 1);
     };
 
     const handlePrev = () => {
@@ -82,6 +83,7 @@ export default function BookingFlow({ preselectedTour = null }) {
             case 1: return formData.duration !== null;
             case 2: return formData.travelers > 0;
             case 3: return formData.experience !== null;
+            case 4: return formData.firstName && formData.email && formData.departureDate;
             default: return true;
         }
     };
@@ -90,7 +92,7 @@ export default function BookingFlow({ preselectedTour = null }) {
         <div className="w-full max-w-4xl mx-auto">
             <ScarabProgress
                 currentStep={currentStep}
-                totalSteps={4}
+                totalSteps={5}
                 steps={steps}
             />
 
@@ -106,7 +108,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                     >
                         <div className="text-center">
                             <Calendar className="w-12 h-12 text-gold-500 mx-auto mb-4" />
-                            <h2 className="font-display text-3xl text-white mb-2">
+                            <h2 className="font-display text-2xl sm:text-3xl text-white mb-2">
                                 Choose Your Timeline
                             </h2>
                             <p className="text-white/60">
@@ -114,13 +116,13 @@ export default function BookingFlow({ preselectedTour = null }) {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                             {durations.map((duration) => (
                                 <motion.button
                                     key={duration.days}
-                                    className={`relative p-6 rounded-xl text-center transition-all ${formData.duration === duration.days
-                                            ? 'bg-gold-500 text-obsidian-950'
-                                            : 'bg-obsidian-900 border border-gold-500/30 hover:border-gold-500'
+                                    className={`relative p-4 sm:p-6 rounded-xl text-center transition-all ${formData.duration === duration.days
+                                        ? 'bg-gold-500 text-obsidian-950'
+                                        : 'bg-obsidian-900 border border-gold-500/30 hover:border-gold-500'
                                         }`}
                                     onClick={() => setFormData({ ...formData, duration: duration.days })}
                                     whileHover={{ scale: 1.02 }}
@@ -131,7 +133,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                                             Popular
                                         </span>
                                     )}
-                                    <div className={`text-3xl font-display mb-2 ${formData.duration === duration.days ? 'text-obsidian-950' : 'text-gold-500'
+                                    <div className={`text-2xl sm:text-3xl font-display mb-2 ${formData.duration === duration.days ? 'text-obsidian-950' : 'text-gold-500'
                                         }`}>
                                         {duration.label}
                                     </div>
@@ -160,7 +162,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                     >
                         <div className="text-center">
                             <Users className="w-12 h-12 text-gold-500 mx-auto mb-4" />
-                            <h2 className="font-display text-3xl text-white mb-2">
+                            <h2 className="font-display text-2xl sm:text-3xl text-white mb-2">
                                 Choose Your Companions
                             </h2>
                             <p className="text-white/60">
@@ -181,7 +183,7 @@ export default function BookingFlow({ preselectedTour = null }) {
 
                             <div className="text-center">
                                 <motion.div
-                                    className="text-7xl font-display text-gold-500"
+                                    className="text-5xl sm:text-7xl font-display text-gold-500"
                                     key={formData.travelers}
                                     initial={{ scale: 0.8, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
@@ -221,7 +223,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                     >
                         <div className="text-center">
                             <Crown className="w-12 h-12 text-gold-500 mx-auto mb-4" />
-                            <h2 className="font-display text-3xl text-white mb-2">
+                            <h2 className="font-display text-2xl sm:text-3xl text-white mb-2">
                                 Choose Your Experience
                             </h2>
                             <p className="text-white/60">
@@ -234,8 +236,8 @@ export default function BookingFlow({ preselectedTour = null }) {
                                 <motion.button
                                     key={level.id}
                                     className={`relative p-6 rounded-xl text-left transition-all ${formData.experience === level.id
-                                            ? 'bg-gradient-to-br from-gold-500 to-gold-600 text-obsidian-950'
-                                            : 'bg-obsidian-900 border border-gold-500/30 hover:border-gold-500'
+                                        ? 'bg-gradient-to-br from-gold-500 to-gold-600 text-obsidian-950'
+                                        : 'bg-obsidian-900 border border-gold-500/30 hover:border-gold-500'
                                         } ${level.popular && formData.experience !== level.id ? 'ring-2 ring-scarab-500' : ''}`}
                                     onClick={() => setFormData({ ...formData, experience: level.id })}
                                     whileHover={{ scale: 1.02 }}
@@ -285,10 +287,88 @@ export default function BookingFlow({ preselectedTour = null }) {
                     </motion.div>
                 )}
 
-                {/* Step 4: Confirmation */}
+                {/* Step 4: Details */}
                 {currentStep === 4 && (
                     <motion.div
                         key="step4"
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -50 }}
+                        className="space-y-8"
+                    >
+                        <div className="text-center">
+                            <Sparkles className="w-12 h-12 text-gold-500 mx-auto mb-4" />
+                            <h2 className="font-display text-2xl sm:text-3xl text-white mb-2">
+                                Travel Details
+                            </h2>
+                            <p className="text-white/60">
+                                Tell us more about your upcoming mission
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-gold-500 text-xs uppercase tracking-widest mb-2">Target Date</label>
+                                    <input
+                                        type="date"
+                                        className="w-full p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none"
+                                        value={formData.departureDate || ''}
+                                        onChange={(e) => setFormData({ ...formData, departureDate: e.target.value })}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-gold-500 text-xs uppercase tracking-widest mb-2">First Name</label>
+                                        <input
+                                            type="text"
+                                            placeholder="John"
+                                            className="w-full p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none"
+                                            value={formData.firstName}
+                                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gold-500 text-xs uppercase tracking-widest mb-2">Last Name</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Doe"
+                                            className="w-full p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none"
+                                            value={formData.lastName}
+                                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-gold-500 text-xs uppercase tracking-widest mb-2">Email Address</label>
+                                    <input
+                                        type="email"
+                                        placeholder="explorer@time.com"
+                                        className="w-full p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-gold-500 text-xs uppercase tracking-widest mb-2">Special Requirements</label>
+                                    <textarea
+                                        placeholder="Any dietary needs, accessibility requirements, or special occasions?"
+                                        className="w-full h-[180px] p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none resize-none"
+                                        value={formData.specialRequests}
+                                        onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* Step 5: Confirmation */}
+                {currentStep === 5 && (
+                    <motion.div
+                        key="step5"
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -50 }}
@@ -302,7 +382,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                             >
                                 <Sparkles className="w-16 h-16 text-gold-500 mx-auto" />
                             </motion.div>
-                            <h2 className="font-display text-3xl text-white mb-2">
+                            <h2 className="font-display text-2xl sm:text-3xl text-white mb-2">
                                 Mission Configured
                             </h2>
                             <p className="text-white/60">
@@ -312,7 +392,7 @@ export default function BookingFlow({ preselectedTour = null }) {
 
                         {/* Summary Card */}
                         <motion.div
-                            className="p-8 rounded-2xl bg-obsidian-900 border border-gold-500/30"
+                            className="p-4 sm:p-8 rounded-2xl bg-obsidian-900 border border-gold-500/30"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                         >
@@ -341,7 +421,7 @@ export default function BookingFlow({ preselectedTour = null }) {
 
                             <div className="border-t border-gold-500/20 pt-8">
                                 <p className="text-center text-white/60 mb-6">
-                                    Ready to confirm? Our travel oracles will contact you within 24 hours to finalize your journey.
+                                    Ready to confirm for {formData.departureDate}? Our travel oracles will contact you at {formData.email} within 24 hours to finalize your journey.
                                 </p>
                                 <div className="flex justify-center">
                                     <GlowButton variant="primary" size="lg">
@@ -358,7 +438,7 @@ export default function BookingFlow({ preselectedTour = null }) {
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-12">
                 <motion.button
-                    className={`flex items-center gap-2 px-6 py-3 rounded-lg border border-gold-500/30 text-gold-500 transition-all hover:border-gold-500 ${currentStep === 1 ? 'opacity-0 pointer-events-none' : ''
+                    className={`flex items-center gap-2 px-4 sm:px-6 py-3 rounded-lg border border-gold-500/30 text-gold-500 transition-all hover:border-gold-500 text-sm sm:text-base ${currentStep === 1 ? 'opacity-0 pointer-events-none' : ''
                         }`}
                     onClick={handlePrev}
                     whileHover={{ x: -5 }}
@@ -367,11 +447,11 @@ export default function BookingFlow({ preselectedTour = null }) {
                     Previous
                 </motion.button>
 
-                {currentStep < 4 && (
+                {currentStep < 5 && (
                     <motion.button
-                        className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all ${canProceed()
-                                ? 'bg-gold-500 text-obsidian-950 hover:bg-gold-400'
-                                : 'bg-obsidian-800 text-white/30 cursor-not-allowed'
+                        className={`flex items-center gap-2 px-4 sm:px-6 py-3 rounded-lg transition-all text-sm sm:text-base ${canProceed()
+                            ? 'bg-gold-500 text-obsidian-950 hover:bg-gold-400'
+                            : 'bg-obsidian-800 text-white/30 cursor-not-allowed'
                             }`}
                         onClick={handleNext}
                         disabled={!canProceed()}

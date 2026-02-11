@@ -424,15 +424,66 @@ body {
    RESPONSIVE UTILITIES
 ======================================== */
 
+/* Fix mobile viewport height (accounts for browser chrome) */
+@supports (height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh;
+  }
+}
+
+/* Ensure tap targets are at least 44px on touch devices */
+@media (pointer: coarse) {
+
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
 @media (max-width: 768px) {
   .glow-gold {
-    box-shadow: 0 0 15px var(--glow-gold);
+    box-shadow: 0 0 10px var(--glow-gold);
+  }
+
+  .glow-teal {
+    box-shadow: 0 0 10px var(--glow-teal);
   }
 
   .btn-primary,
   .btn-secondary {
     padding: 12px 24px;
     font-size: 12px;
+  }
+
+  /* Reduce glow effects on mobile for performance */
+  .glow-text-gold {
+    text-shadow: 0 0 8px var(--glow-gold);
+  }
+
+  .glow-text-teal {
+    text-shadow: 0 0 8px var(--glow-teal);
+  }
+}
+
+/* Small phones (iPhone SE, etc.) */
+@media (max-width: 380px) {
+  .font-display {
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 18px;
+    font-size: 11px;
+  }
+}
+
+/* Safe area for notch devices */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .fixed.bottom-6 {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
