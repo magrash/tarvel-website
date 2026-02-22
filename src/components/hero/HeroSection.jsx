@@ -4,9 +4,11 @@ import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import GlowButton from '@/components/ui/GlowButton';
 import ParticleField from './ParticleField';
+import { useLanguage } from '@/context/LanguageContext';
 
 
 export default function HeroSection() {
+    const { t } = useLanguage();
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
@@ -22,12 +24,8 @@ export default function HeroSection() {
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
     const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
-    const stats = [
-        { value: '5000+', label: 'Years of History' },
-        { value: '50K+', label: 'Time Travelers' },
-        { value: '4.9', label: 'Star Rating' },
-        { value: '24/7', label: 'Support' },
-    ];
+
+
 
     return (
         <section
@@ -72,20 +70,7 @@ export default function HeroSection() {
                 className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center pt-20 sm:pt-0"
                 style={{ opacity, scale }}
             >
-                {/* Pre-heading */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="mb-6"
-                >
-                    <span className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full border border-gold-500/30 bg-obsidian-900/50 backdrop-blur-sm">
-                        <span className="w-2 h-2 rounded-full bg-scarab-500 animate-pulse" />
-                        <span className="text-xs sm:text-sm text-gold-500 tracking-wider uppercase">
-                            Time Portal Active
-                        </span>
-                    </span>
-                </motion.div>
+
 
                 {/* Main heading */}
                 <motion.h1
@@ -94,23 +79,14 @@ export default function HeroSection() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                    <span className="text-white">Journey Through</span>
+                    <span className="text-white">{t('hero.title')}</span>
                     <br />
                     <span className="text-gradient-gold glow-text-gold">
-                        5000 Years
+                        {t('hero.titleHighlight')}
                     </span>
                 </motion.h1>
 
-                {/* Subheading */}
-                <motion.p
-                    className="text-sm sm:text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-6 sm:mb-10 leading-relaxed px-2"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                >
-                    Egypt like you've never experienced it!
-                    From ancient temples to modern luxury, your journey across millennia begins now.
-                </motion.p>
+
 
                 {/* CTA Buttons */}
                 <motion.div
@@ -120,37 +96,14 @@ export default function HeroSection() {
                     transition={{ duration: 0.8, delay: 0.8 }}
                 >
                     <GlowButton variant="primary" size="lg" href="/booking">
-                        Begin Your Journey
+                        {t('nav.bookNow')}
                     </GlowButton>
                     <GlowButton variant="secondary" size="lg" href="/tours">
-                        Explore Tours
+                        {t('hero.ctaPrimary')}
                     </GlowButton>
                 </motion.div>
 
-                {/* Stats */}
-                <motion.div
-                    className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 1 }}
-                >
-                    {stats.map((stat, index) => (
-                        <motion.div
-                            key={stat.label}
-                            className="text-center"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
-                        >
-                            <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-gold-500 mb-1">
-                                {stat.value}
-                            </div>
-                            <div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider">
-                                {stat.label}
-                            </div>
-                        </motion.div>
-                    ))}
-                </motion.div>
+
             </motion.div>
 
             {/* Scroll indicator */}

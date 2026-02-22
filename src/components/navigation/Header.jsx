@@ -5,12 +5,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Menu, X, Globe, ChevronDown } from 'lucide-react';
 import { languages } from '@/lib/data';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isLangOpen, setIsLangOpen] = useState(false);
-    const [currentLang, setCurrentLang] = useState(languages[0]);
+    const { lang, setLang, t, isRTL } = useLanguage();
+    const currentLang = languages.find(l => l.code === lang) || languages[0];
 
     useEffect(() => {
         const handleScroll = () => {
@@ -20,26 +22,32 @@ export default function Header() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Apply RTL direction to the html element when language changes
+    useEffect(() => {
+        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+        document.documentElement.lang = lang;
+    }, [lang, isRTL]);
+
     const navItems = [
-        { name: 'Destinations', href: '/destinations' },
-        { name: 'Tours', href: '/tours' },
-        { name: 'Experiences', href: '/#experiences' },
-        { name: 'Book Now', href: '/booking', highlight: true },
+        { name: t('nav.destinations'), href: '/destinations' },
+        { name: t('nav.tours'), href: '/tours' },
+        { name: t('nav.experiences'), href: '/#experiences' },
+        { name: t('nav.bookNow'), href: '/booking', highlight: true },
     ];
 
     return (
         <>
             <motion.header
                 className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-                    ? 'bg-obsidian-950/90 backdrop-blur-xl border-b border-gold-500/20'
+                    ? 'glass border-b border-gold-500/20'
                     : 'bg-transparent'
                     }`}
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.6 }}
             >
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between h-16 sm:h-20">
 
                         {/* Logo */}
                         <Link href="/" className="relative group">
@@ -94,7 +102,7 @@ export default function Header() {
                             {/* Language Selector */}
                             <div className="relative hidden md:block">
                                 <motion.button
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gold-500/30 hover:border-gold-500 transition-colors"
+                                    className="glass-badge flex items-center gap-2 px-3 py-2 rounded-lg hover:border-gold-500 transition-colors"
                                     onClick={() => setIsLangOpen(!isLangOpen)}
                                     whileHover={{ scale: 1.02 }}
                                 >
@@ -106,7 +114,7 @@ export default function Header() {
                                 <AnimatePresence>
                                     {isLangOpen && (
                                         <motion.div
-                                            className="absolute top-full right-0 mt-2 py-2 w-40 bg-obsidian-900/95 backdrop-blur-xl rounded-lg border border-gold-500/20 shadow-xl"
+                                            className="absolute top-full right-0 mt-2 py-2 w-40 glass rounded-lg"
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
@@ -117,7 +125,7 @@ export default function Header() {
                                                     className={`w-full px-4 py-2 text-left text-sm flex items-center gap-3 hover:bg-gold-500/10 transition-colors ${currentLang.code === lang.code ? 'text-gold-500' : 'text-white/80'
                                                         }`}
                                                     onClick={() => {
-                                                        setCurrentLang(lang);
+                                                        setLang(lang.code);
                                                         setIsLangOpen(false);
                                                     }}
                                                 >
@@ -154,7 +162,7 @@ export default function Header() {
                     >
                         {/* Backdrop */}
                         <motion.div
-                            className="absolute inset-0 bg-obsidian-950/95 backdrop-blur-xl"
+                            className="absolute inset-0 glass-dark"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -163,7 +171,7 @@ export default function Header() {
 
                         {/* Menu Content */}
                         <motion.nav
-                            className="absolute inset-x-0 top-20 p-6 flex flex-col gap-6"
+                            className="absolute inset-x-0 top-16 sm:top-20 mx-3 p-6 flex flex-col gap-5 glass rounded-2xl border border-gold-500/20 safe-bottom"
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
@@ -179,7 +187,7 @@ export default function Header() {
                                     <Link
                                         href={item.href}
                                         className={`
-                      block font-display text-2xl tracking-wider
+                      block font-display text-xl sm:text-2xl tracking-wider
                       ${item.highlight
                                                 ? 'text-gold-500'
                                                 : 'text-white/80 hover:text-gold-500'
@@ -199,7 +207,7 @@ export default function Header() {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.3 }}
                             >
-                                <p className="text-sm text-gold-500/60 mb-4">Select Language</p>
+                                <p className="text-sm text-gold-500/60 mb-4">{t('nav.selectLanguage')}</p>
                                 <div className="flex flex-wrap gap-3">
                                     {languages.map((lang) => (
                                         <button
@@ -208,7 +216,7 @@ export default function Header() {
                                                 ? 'border-gold-500 bg-gold-500/10 text-gold-500'
                                                 : 'border-gold-500/30 text-white/60 hover:border-gold-500'
                                                 }`}
-                                            onClick={() => setCurrentLang(lang)}
+                                            onClick={() => setLang(lang.code)}
                                         >
                                             {lang.flag} {lang.name}
                                         </button>

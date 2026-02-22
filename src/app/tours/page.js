@@ -1,41 +1,81 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/navigation/Header';
 import Footer from '@/components/navigation/Footer';
 import TourCard from '@/components/cards/TourCard';
+import FilterBar from '@/components/filters/FilterBar';
 import CustomCursor from '@/components/ui/CustomCursor';
 import AIOracle from '@/components/oracle/AIOracle';
 import GlowButton from '@/components/ui/GlowButton';
-import { tours, experiences } from '@/lib/data';
-import { Filter, Calendar, Users, Sparkles, ArrowRight } from 'lucide-react';
+import { tours as fallbackTours, experiences as fallbackExperiences } from '@/lib/data';
+import { Calendar, Sparkles, ArrowRight } from 'lucide-react';
 
-export default function ToursPage() {
-    const [activeLevel, setActiveLevel] = useState('all');
-    const [activeCategory, setActiveCategory] = useState('all');
+function ToursContent() {
+    const searchParams = useSearchParams();
+    const destParam = searchParams.get('destination');
 
-    const levelFilters = [
-        { id: 'all', label: 'All Levels' },
-        { id: 'Explorer', label: '🧭 Explorer' },
-        { id: 'Royal', label: '👑 Royal' },
-        { id: 'Pharaoh', label: '𓂀 Pharaoh' },
-    ];
+    const [tours, setTours] = useState(fallbackTours);
+    const [experiences, setExperiences] = useState(fallbackExperiences);
 
-    const categoryFilters = [
-        { id: 'all', label: 'All Tours' },
-        { id: 'full-day', label: 'Full-Day' },
-        { id: 'half-day', label: 'Half-Day' },
-        { id: 'package', label: 'Packages' },
-    ];
+    useEffect(() => {
+        fetch('/api/content')
+            .then(res => res.json())
+            .then(data => {
+                if (data.tours?.length) setTours(data.tours);
+                if (data.experiences?.length) setExperiences(data.experiences);
+            })
+            .catch(() => { });
+    }, []);
 
-    const filteredTours = tours.filter((tour) => {
-        const matchesLevel = activeLevel === 'all' || tour.level === activeLevel;
-        const matchesCategory = activeCategory === 'all' || tour.category === activeCategory;
-        return matchesLevel && matchesCategory;
+    const [filters, setFilters] = useState({
+        destination: 'all',
+        tourType: 'all',
+        budgetRange: [0, 1000],
+        duration: 'all',
+        minRating: 0,
     });
 
-    const timegateTours = tours.filter(t => t.category === 'timegate');
+    // Set initial destination from URL param
+    useEffect(() => {
+        if (destParam) {
+            setFilters(prev => ({ ...prev, destination: destParam }));
+        }
+    }, [destParam]);
+
+    const filteredTours = useMemo(() => {
+        return tours.filter((tour) => {
+            // Skip timegate tours from main listing
+            if (tour.category === 'timegate') return false;
+
+            // Destination filter
+            if (filters.destination !== 'all') {
+                const tourDest = tour.destination || tour.region || '';
+                if (tourDest !== filters.destination) return false;
+            }
+
+            // Tour type filter
+            if (filters.tourType !== 'all' && tour.tourType !== filters.tourType && tour.category !== filters.tourType) return false;
+
+            // Budget range filter
+            if (tour.price < filters.budgetRange[0] || tour.price > filters.budgetRange[1]) return false;
+
+            // Duration filter
+            if (filters.duration !== 'all') {
+                if (filters.duration === '1' && tour.days !== 1) return false;
+                if (filters.duration === 'multi' && tour.days <= 1) return false;
+            }
+
+            // Rating filter
+            if (filters.minRating > 0 && tour.rating < filters.minRating) return false;
+
+            return true;
+        });
+    }, [filters, tours]);
+
+    const nonTimegateTotal = tours.filter(t => t.category !== 'timegate').length;
 
     return (
         <>
@@ -45,7 +85,7 @@ export default function ToursPage() {
 
             <main className="min-h-screen bg-obsidian-950">
                 {/* Hero Section */}
-                <section className="relative pt-32 pb-20 overflow-hidden">
+                <section className="relative pt-24 sm:pt-32 pb-12 sm:pb-20 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950 via-obsidian-900 to-obsidian-950" />
 
                     {/* Animated background elements */}
@@ -72,7 +112,7 @@ export default function ToursPage() {
                         ))}
                     </div>
 
-                    <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -81,10 +121,10 @@ export default function ToursPage() {
                             <span className="inline-block text-scarab-500 text-sm tracking-[0.3em] uppercase mb-4">
                                 Curated Journeys
                             </span>
-                            <h1 className="font-display text-5xl md:text-7xl text-white mb-6">
+                            <h1 className="font-display text-3xl sm:text-5xl md:text-7xl text-white mb-4 sm:mb-6">
                                 Tours & <span className="text-gradient-gold">Packages</span>
                             </h1>
-                            <p className="text-white/60 text-lg max-w-2xl mx-auto">
+                            <p className="text-white/60 text-sm sm:text-lg max-w-2xl mx-auto">
                                 Expertly crafted itineraries that blend ancient wonders with modern luxury.
                                 Every journey is a carefully orchestrated symphony of experiences.
                             </p>
@@ -92,144 +132,100 @@ export default function ToursPage() {
                     </div>
                 </section>
 
-                {/* Filters Section */}
-                <section className="py-8 border-y border-gold-500/10 sticky top-20 z-30 bg-obsidian-950/95 backdrop-blur-xl">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                        <div className="flex flex-col md:flex-row md:items-center gap-4">
-                            {/* Level Filters */}
-                            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar">
-                                <span className="text-gold-500/60 text-sm shrink-0">Level:</span>
-                                {levelFilters.map((filter) => (
-                                    <motion.button
-                                        key={filter.id}
-                                        className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all ${activeLevel === filter.id
-                                            ? 'bg-gold-500 text-obsidian-950 font-semibold'
-                                            : 'border border-gold-500/30 text-white/70 hover:border-gold-500'
-                                            }`}
-                                        onClick={() => setActiveLevel(filter.id)}
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                    >
-                                        {filter.label}
-                                    </motion.button>
-                                ))}
-                            </div>
-
-                            <div className="hidden md:block w-px h-8 bg-gold-500/20" />
-
-                            {/* Category Filters */}
-                            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar">
-                                <span className="text-gold-500/60 text-sm shrink-0">Type:</span>
-                                {categoryFilters.map((filter) => (
-                                    <motion.button
-                                        key={filter.id}
-                                        className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-all ${activeCategory === filter.id
-                                            ? 'bg-scarab-500 text-white font-semibold'
-                                            : 'border border-gold-500/30 text-white/70 hover:border-gold-500'
-                                            }`}
-                                        onClick={() => setActiveCategory(filter.id)}
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                    >
-                                        {filter.label}
-                                    </motion.button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                {/* Advanced Filter Bar */}
+                <FilterBar
+                    filters={filters}
+                    onFilterChange={setFilters}
+                    tourCount={filteredTours.length}
+                    totalCount={nonTimegateTotal}
+                />
 
                 {/* Tours Grid */}
-                <section className="py-16">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                        {filteredTours.length > 0 ? (
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                {filteredTours.map((tour, index) => (
-                                    <TourCard
-                                        key={tour.id}
-                                        tour={tour}
-                                        index={index}
-                                    />
-                                ))}
-                            </div>
-                        ) : (
-                            <motion.div
-                                className="text-center py-20"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                            >
-                                <Calendar className="w-16 h-16 text-gold-500/30 mx-auto mb-4" />
-                                <h3 className="text-white text-xl mb-2">No tours found</h3>
-                                <p className="text-white/60 mb-6">Try adjusting your filters</p>
-                                <GlowButton variant="secondary" onClick={() => {
-                                    setActiveLevel('all');
-                                    setActiveCategory('all');
-                                }}>
-                                    Clear Filters
-                                </GlowButton>
-                            </motion.div>
-                        )}
+                <section className="py-8 sm:py-16">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <AnimatePresence mode="wait">
+                            {filteredTours.length > 0 ? (
+                                <motion.div
+                                    key={JSON.stringify(filters)}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8"
+                                >
+                                    {filteredTours.map((tour, index) => (
+                                        <TourCard
+                                            key={tour.id}
+                                            tour={tour}
+                                            index={index}
+                                        />
+                                    ))}
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="empty"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="text-center py-20"
+                                >
+                                    <Calendar className="w-16 h-16 text-gold-500/30 mx-auto mb-4" />
+                                    <h3 className="text-white text-xl mb-2">No tours found</h3>
+                                    <p className="text-white/60 mb-6">Try adjusting your filters</p>
+                                    <GlowButton variant="secondary" onClick={() => setFilters({
+                                        destination: 'all',
+                                        tourType: 'all',
+                                        budgetRange: [0, 1500],
+                                        duration: 'all',
+                                        minRating: 0,
+                                    })}>
+                                        Clear All Filters
+                                    </GlowButton>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </section>
 
-                {/* Time Gate Special Section */}
-                <section id="timegate" className="py-24 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-scarab-900/30 via-nile-900/30 to-scarab-900/30" />
+                {/* Featured Packages Section */}
+                <section className="py-16 sm:py-24 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-gold-900/10 via-obsidian-950 to-scarab-900/10" />
 
-                    {/* Animated portal effect */}
-                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <motion.div
-                            className="w-[600px] h-[600px] rounded-full border-2 border-scarab-500/20"
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-                        />
-                        <motion.div
-                            className="absolute w-[400px] h-[400px] rounded-full border-2 border-nile-500/20"
-                            animate={{ rotate: -360 }}
-                            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                        />
-                        <motion.div
-                            className="absolute w-[200px] h-[200px] rounded-full border-2 border-gold-500/20"
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-                        />
-                    </div>
-
-                    <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
-                        <motion.div
-                            className="text-center mb-16"
+                            className="text-center mb-12 sm:mb-16"
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                         >
                             <motion.div
-                                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-scarab-500/20 border border-scarab-500/40 mb-6"
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gold-500/10 border border-gold-500/30 mb-6"
                                 animate={{
                                     boxShadow: [
-                                        '0 0 20px rgba(20,184,166,0.3)',
-                                        '0 0 40px rgba(20,184,166,0.5)',
-                                        '0 0 20px rgba(20,184,166,0.3)',
+                                        '0 0 20px rgba(245,158,11,0.2)',
+                                        '0 0 40px rgba(245,158,11,0.4)',
+                                        '0 0 20px rgba(245,158,11,0.2)',
                                     ]
                                 }}
                                 transition={{ duration: 2, repeat: Infinity }}
                             >
-                                <Sparkles className="w-5 h-5 text-scarab-400" />
-                                <span className="text-scarab-400 font-display tracking-wider">EUROPE → EGYPT</span>
-                                <Sparkles className="w-5 h-5 text-scarab-400" />
+                                <Sparkles className="w-5 h-5 text-gold-400" />
+                                <span className="text-gold-400 font-display tracking-wider">MULTI-DAY ADVENTURES</span>
+                                <Sparkles className="w-5 h-5 text-gold-400" />
                             </motion.div>
 
-                            <h2 className="font-display text-4xl md:text-6xl text-white mb-4">
-                                Time Gate <span className="text-gradient-teal">Packages</span>
+                            <h2 className="font-display text-3xl sm:text-4xl md:text-6xl text-white mb-4">
+                                Featured <span className="text-gradient-gold">Packages</span>
                             </h2>
-                            <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                                Step through the portal directly from your city. Premium packages with flights,
-                                luxury transfers, and curated Egyptian experiences.
+                            <p className="text-white/60 text-sm sm:text-lg max-w-2xl mx-auto">
+                                Experience the best of Egypt in one unforgettable journey. Cairo, the Nile,
+                                ancient temples, and luxury cruises — all perfectly curated.
                             </p>
                         </motion.div>
 
-                        {/* Time Gate Tours */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                            {timegateTours.map((tour, index) => (
+                        {/* Package Tour Cards */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-12">
+                            {tours.filter(t => t.tourType === 'package').map((tour, index) => (
                                 <TourCard
                                     key={tour.id}
                                     tour={tour}
@@ -238,53 +234,50 @@ export default function ToursPage() {
                             ))}
                         </div>
 
-                        {/* Departure Cities */}
+                        {/* Highlights Banner */}
                         <motion.div
-                            className="p-8 rounded-2xl bg-obsidian-900/50 border border-scarab-500/20"
+                            className="p-6 sm:p-8 rounded-2xl bg-obsidian-900/50 border border-gold-500/20"
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                         >
                             <h3 className="font-display text-xl text-white mb-6 text-center">
-                                Available Departure Cities
+                                What&apos;s Included in Every Package
                             </h3>
-                            <div className="flex flex-wrap justify-center gap-4">
-                                {['London', 'Paris', 'Berlin', 'Rome', 'Madrid', 'Amsterdam', 'Stockholm'].map((city, i) => (
+                            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                                {['Private Egyptologist', 'All Entrance Fees', 'Luxury Transport', 'Hotel & Cruise', 'Airport Transfers', 'Daily Meals', 'No Hidden Costs'].map((item, i) => (
                                     <motion.div
-                                        key={city}
-                                        className="px-6 py-3 rounded-lg bg-obsidian-800 border border-gold-500/20 text-white"
+                                        key={item}
+                                        className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-obsidian-800 border border-gold-500/20 text-white text-sm"
                                         initial={{ opacity: 0, scale: 0.9 }}
                                         whileInView={{ opacity: 1, scale: 1 }}
                                         viewport={{ once: true }}
                                         transition={{ delay: i * 0.1 }}
-                                        whileHover={{ borderColor: 'rgba(20,184,166,0.5)', scale: 1.05 }}
+                                        whileHover={{ borderColor: 'rgba(245,158,11,0.5)', scale: 1.05 }}
                                     >
-                                        {city}
+                                        {item}
                                     </motion.div>
                                 ))}
                             </div>
-                            <p className="text-center text-white/40 text-sm mt-6">
-                                More cities coming soon. Contact us for custom departure arrangements.
-                            </p>
                         </motion.div>
                     </div>
                 </section>
 
                 {/* Custom Trip CTA */}
-                <section className="py-24 relative overflow-hidden">
+                <section className="py-16 sm:py-24 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-gold-900/20 via-obsidian-950 to-scarab-900/20" />
 
-                    <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+                    <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                         >
                             <span className="text-6xl mb-6 block">𓂀</span>
-                            <h2 className="font-display text-4xl md:text-5xl text-white mb-6">
-                                Can't Find Your <span className="text-gradient-gold">Perfect Journey?</span>
+                            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-white mb-6">
+                                Can&apos;t Find Your <span className="text-gradient-gold">Perfect Journey?</span>
                             </h2>
-                            <p className="text-white/60 text-lg mb-10 max-w-2xl mx-auto">
+                            <p className="text-white/60 text-sm sm:text-lg mb-10 max-w-2xl mx-auto">
                                 Let our travel oracles craft a completely bespoke Egyptian adventure
                                 tailored to your dreams, timeline, and desires.
                             </p>
@@ -299,5 +292,20 @@ export default function ToursPage() {
 
             <Footer />
         </>
+    );
+}
+
+// Wrap in Suspense for useSearchParams
+import { Suspense } from 'react';
+
+export default function ToursPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-obsidian-950 flex items-center justify-center">
+                <div className="text-gold-500 font-display text-xl loading-glyph">𓂀</div>
+            </div>
+        }>
+            <ToursContent />
+        </Suspense>
     );
 }

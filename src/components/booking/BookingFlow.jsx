@@ -122,7 +122,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                                     key={duration.days}
                                     className={`relative p-4 sm:p-6 rounded-xl text-center transition-all ${formData.duration === duration.days
                                         ? 'bg-gold-500 text-obsidian-950'
-                                        : 'bg-obsidian-900 border border-gold-500/30 hover:border-gold-500'
+                                        : 'glass-card'
                                         }`}
                                     onClick={() => setFormData({ ...formData, duration: duration.days })}
                                     whileHover={{ scale: 1.02 }}
@@ -172,7 +172,7 @@ export default function BookingFlow({ preselectedTour = null }) {
 
                         <div className="flex items-center justify-center gap-8">
                             <motion.button
-                                className="w-14 h-14 rounded-full bg-obsidian-800 border border-gold-500/30 text-gold-500 text-2xl font-bold hover:border-gold-500 disabled:opacity-30"
+                                className="glass-badge w-14 h-14 rounded-full text-gold-500 text-2xl font-bold hover:border-gold-500 disabled:opacity-30"
                                 onClick={() => setFormData({ ...formData, travelers: Math.max(1, formData.travelers - 1) })}
                                 disabled={formData.travelers <= 1}
                                 whileHover={{ scale: 1.1 }}
@@ -237,7 +237,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                                     key={level.id}
                                     className={`relative p-6 rounded-xl text-left transition-all ${formData.experience === level.id
                                         ? 'bg-gradient-to-br from-gold-500 to-gold-600 text-obsidian-950'
-                                        : 'bg-obsidian-900 border border-gold-500/30 hover:border-gold-500'
+                                        : 'glass-card'
                                         } ${level.popular && formData.experience !== level.id ? 'ring-2 ring-scarab-500' : ''}`}
                                     onClick={() => setFormData({ ...formData, experience: level.id })}
                                     whileHover={{ scale: 1.02 }}
@@ -312,7 +312,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                                     <label className="block text-gold-500 text-xs uppercase tracking-widest mb-2">Target Date</label>
                                     <input
                                         type="date"
-                                        className="w-full p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none"
+                                        className="glass-input w-full p-3 rounded-lg text-white outline-none"
                                         value={formData.departureDate || ''}
                                         onChange={(e) => setFormData({ ...formData, departureDate: e.target.value })}
                                     />
@@ -323,7 +323,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                                         <input
                                             type="text"
                                             placeholder="John"
-                                            className="w-full p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none"
+                                            className="glass-input w-full p-3 rounded-lg text-white outline-none"
                                             value={formData.firstName}
                                             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                         />
@@ -333,7 +333,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                                         <input
                                             type="text"
                                             placeholder="Doe"
-                                            className="w-full p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none"
+                                            className="glass-input w-full p-3 rounded-lg text-white outline-none"
                                             value={formData.lastName}
                                             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                         />
@@ -344,7 +344,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                                     <input
                                         type="email"
                                         placeholder="explorer@time.com"
-                                        className="w-full p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none"
+                                        className="glass-input w-full p-3 rounded-lg text-white outline-none"
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     />
@@ -355,7 +355,7 @@ export default function BookingFlow({ preselectedTour = null }) {
                                     <label className="block text-gold-500 text-xs uppercase tracking-widest mb-2">Special Requirements</label>
                                     <textarea
                                         placeholder="Any dietary needs, accessibility requirements, or special occasions?"
-                                        className="w-full h-[180px] p-3 bg-obsidian-900 border border-gold-500/20 rounded-lg text-white focus:border-gold-500 outline-none resize-none"
+                                        className="glass-input w-full h-[180px] p-3 rounded-lg text-white outline-none resize-none"
                                         value={formData.specialRequests}
                                         onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
                                     />

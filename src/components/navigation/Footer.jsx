@@ -13,16 +13,18 @@ import {
     MapPin,
     ArrowRight
 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Footer() {
+    const { t } = useLanguage();
     const currentYear = new Date().getFullYear();
 
     const footerLinks = {
         explore: [
-            { name: 'Destinations', href: '/destinations' },
-            { name: 'Tours & Packages', href: '/tours' },
-            { name: 'Experiences', href: '/#experiences' },
-            { name: 'Time Gate Deals', href: '/tours#timegate' },
+            { name: t('nav.destinations'), href: '/destinations' },
+            { name: t('nav.tours'), href: '/tours' },
+            { name: t('nav.experiences'), href: '/#experiences' },
+            { name: t('nav.bookNow'), href: '/booking' },
         ],
         destinations: [
             { name: 'Giza', href: '/destinations?region=Giza' },
@@ -37,13 +39,13 @@ export default function Footer() {
             { name: 'Half-Day Tours', href: '/tours?type=half-day' },
             { name: 'Packages', href: '/tours?type=package' },
             { name: 'Fayoum', href: '/destinations?region=Fayoum' },
-            { name: 'St. Catherine', href: '/destinations?region=Sinai' },
+            { name: 'Siwa Oasis', href: '/destinations?region=Siwa' },
         ],
         legal: [
-            { name: 'Privacy Policy', href: '/privacy' },
-            { name: 'Terms of Service', href: '/terms' },
-            { name: 'Booking Conditions', href: '/conditions' },
-            { name: 'Cookie Policy', href: '/cookies' },
+            { name: t('footer.privacy'), href: '/privacy' },
+            { name: t('footer.terms'), href: '/terms' },
+            { name: t('footer.about'), href: '/about' },
+            { name: t('footer.contactUs'), href: '/contact' },
         ],
     };
 
@@ -55,7 +57,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="relative bg-obsidian-950 border-t border-gold-500/20">
+        <footer className="relative glass-dark border-t border-gold-500/20">
             {/* Decorative top border */}
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500 to-transparent" />
 
@@ -75,7 +77,7 @@ export default function Footer() {
                             <input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="flex-1 px-4 sm:px-6 py-3 bg-obsidian-900 border border-gold-500/30 rounded-lg sm:rounded-l-lg sm:rounded-r-none text-white placeholder:text-white/40 focus:outline-none focus:border-gold-500 transition-colors text-sm sm:text-base"
+                                className="glass-input flex-1 px-4 sm:px-6 py-3 rounded-lg sm:rounded-l-lg sm:rounded-r-none text-white placeholder:text-white/40 focus:outline-none transition-colors text-sm sm:text-base"
                             />
                             <motion.button
                                 className="px-6 py-3 bg-gold-500 text-obsidian-950 font-display font-semibold tracking-wider rounded-lg sm:rounded-l-none sm:rounded-r-lg flex items-center justify-center gap-2 text-sm sm:text-base"
@@ -119,13 +121,13 @@ export default function Footer() {
                                 <Mail className="w-4 h-4" />
                                 <span>hello@gobatravel.com</span>
                             </a>
-                            <a href="tel:+442012345678" className="flex items-center gap-3 text-white/60 hover:text-gold-500 transition-colors">
+                            <a href="tel:+201234567890" className="flex items-center gap-3 text-white/60 hover:text-gold-500 transition-colors">
                                 <Phone className="w-4 h-4" />
-                                <span>+44 20 1234 5678</span>
+                                <span>+20 123 456 7890</span>
                             </a>
                             <div className="flex items-start gap-3 text-white/60">
                                 <MapPin className="w-4 h-4 mt-1" />
-                                <span>London • Paris • Cairo</span>
+                                <span>Cairo, Egypt</span>
                             </div>
                         </div>
 
@@ -151,7 +153,7 @@ export default function Footer() {
                     {/* Links Columns */}
                     <div>
                         <h4 className="font-display text-gold-500 tracking-wider uppercase mb-4">
-                            Explore
+                            {t('footer.quickLinks')}
                         </h4>
                         <ul className="space-y-3">
                             {footerLinks.explore.map((link) => (
@@ -169,7 +171,7 @@ export default function Footer() {
 
                     <div>
                         <h4 className="font-display text-gold-500 tracking-wider uppercase mb-4">
-                            Locations
+                            {t('nav.destinations')}
                         </h4>
                         <ul className="space-y-3">
                             {footerLinks.destinations.map((link) => (
@@ -187,7 +189,7 @@ export default function Footer() {
 
                     <div>
                         <h4 className="font-display text-gold-500 tracking-wider uppercase mb-4">
-                            Tours
+                            {t('nav.tours')}
                         </h4>
                         <ul className="space-y-3">
                             {footerLinks.tours.map((link) => (
@@ -228,10 +230,10 @@ export default function Footer() {
                 <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <p className="text-white/40 text-sm text-center md:text-left">
-                            © {currentYear} Goba Travel. All rights reserved. ATOL Protected.
+                            © {currentYear} Goba Travel. {t('footer.rights')}
                         </p>
                         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-white/40 text-xs sm:text-sm">
-                            <span>🇬🇧 UK Registered</span>
+                            <span>🇪🇬 Egypt Licensed</span>
                             <span>|</span>
                             <span>Secure Payments</span>
                             <span>|</span>
